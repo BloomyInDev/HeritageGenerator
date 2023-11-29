@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, os
 from utils.person import Person, Sex
 from utils.family import Family
 from utils.date import Date, parse_date
@@ -12,9 +12,46 @@ class Sql:
             filepath (str): Path to the database file
         """
         assert isinstance(filepath, str)
+        does_file_already_exist = os.path.isfile(filepath)
         self.__sql_conn = sqlite3.connect(filepath)
         self.__cursor = self.__sql_conn.cursor()
+        if not does_file_already_exist:
+            self.__init_db()
+
         pass
+
+    def __init_db(self):
+        init_db_cmd = """
+        CREATE TABLE "Family" (
+            "Id"	INTEGER NOT NULL UNIQUE,
+            "Dad"	INTEGER NOT NULL,
+            "Mom"	INTEGER NOT NULL,
+            "Childs"	TEXT,
+            "WeddingDate"	TEXT,
+            "WeddingLocation"	TEXT,
+            "DivorceDate"	TEXT,
+            "DivorceLocation"	TEXT,
+            "Notes"	TEXT,
+            "AdditionalFiles"	TEXT,
+            PRIMARY KEY("Id" AUTOINCREMENT)
+        );
+        CREATE TABLE "Person" (
+            "Id"	INTEGER NOT NULL UNIQUE,
+            "Name"	TEXT NOT NULL,
+            "FirstName"	TEXT NOT NULL,
+            "OldName"	TEXT,
+            "BirthDate"	TEXT,
+            "BirthLocation"	TEXT,
+            "DeathDate"	TEXT,
+            "DeathLocation"	TEXT,
+            "Job"	TEXT,
+            "Notes"	TEXT,
+            "AdditionalFiles"	TEXT,
+            PRIMARY KEY("Id" AUTOINCREMENT)
+        );
+        """
+        self.__sql_conn.executescript(init_db_cmd)
+        self.__sql_conn.commit()
 
     def get_all_persons(self):
         data: list[
@@ -58,9 +95,9 @@ class Sql:
         for person in to_parse:
             birth_date, death_date = None, None
             if isinstance(person[4], str):
-                birth_date = parse_date(person[4])
+                birth_date: Date | None = parse_date(person[4])
             if isinstance(person[6], str):
-                death_date = parse_date(person[6])
+                death_date: Date | None = parse_date(person[6])
             newperson = Person(
                 person[0],
                 person[1],
@@ -119,7 +156,7 @@ class Sql:
             if family[3] != None:
                 for child_id in family[3]:
                     childs.append(persons[int(child_id)])
-            wedding_date = None if family[4] is None else parse_date(family[4])
+            wedding_date: Date | None = None if family[4] is None else parse_date(family[4])
 
             families[family[0]] = Family(family[0], persons[family[1]], persons[family[2]], childs, wedding_date)
         return families
