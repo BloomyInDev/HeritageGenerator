@@ -13,6 +13,7 @@ class Family:
         wedding_location: str | None = None,
         divorce_date: Date | None = None,
         divorce_location: str | None = None,
+        notes: str | None = None,
     ) -> None:
         assert isinstance(id, int)
         assert isinstance(mom, Person)
@@ -41,6 +42,10 @@ class Family:
             self.divorce_location = divorce_location
         else:
             self.divorce_location = None
+        if isinstance(notes, str):
+            self.notes = notes
+        else:
+            self.notes = None
         pass
 
 

@@ -1,2 +1,7 @@
-from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer
+class Ui:
+    def __init__(self) -> None:
+        pass
+
+
+if __name__ == "__main__":
+    Ui()

@@ -55,23 +55,34 @@ class Person:
             self.notes = notes
         else:
             self.notes = None
-        for e in additional_files:
-            assert isinstance(e, str)
-        self.__additional_files = additional_files
+        ## Reimplement additional files system
+        # for e in additional_files:
+        #    assert isinstance(e, str)
+        # self.__additional_files = additional_files
+        self.__additional_files: list[str] = []
         pass
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.name}"
 
-    def get__birth_date(self) -> str | None:
+    def get_birth_date(self) -> str | None:
         if isinstance(self.__birth_date, Date):
             return str(self.__birth_date)
         return None
 
-    def get__death_date(self) -> str | None:
+    def get_death_date(self) -> str | None:
         if isinstance(self.__death_date, Date):
             return str(self.__death_date)
         return None
+
+    def get_additional_files(self, as_string: bool = False) -> list[str] | str | None:
+        if as_string:
+            final_string = ""
+            for file in self.__additional_files:
+                final_string += f'"{file}"'
+            return final_string
+        else:
+            return self.__additional_files
 
 
 class Sex:

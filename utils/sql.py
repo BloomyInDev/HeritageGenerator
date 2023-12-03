@@ -1,5 +1,5 @@
 import sqlite3, os
-from utils.person import Person, Sex
+from utils.person import Person
 from utils.family import Family
 from utils.date import Date, parse_date
 
@@ -14,10 +14,8 @@ class Sql:
         assert isinstance(filepath, str)
         does_file_already_exist = os.path.isfile(filepath)
         self.__sql_conn = sqlite3.connect(filepath)
-        self.__cursor = self.__sql_conn.cursor()
         if not does_file_already_exist:
             self.__init_db()
-
         pass
 
     def __init_db(self):
@@ -53,7 +51,7 @@ class Sql:
         self.__sql_conn.executescript(init_db_cmd)
         self.__sql_conn.commit()
 
-    def get_all_persons(self):
+    def get_all_persons_raw(self):
         data: list[
             tuple[
                 int,
@@ -69,7 +67,8 @@ class Sql:
                 str | None,
             ]
         ] = []
-        for row in self.__cursor.execute("SELECT * FROM Person"):
+        cursor = self.__sql_conn.cursor()
+        for row in cursor.execute("SELECT * FROM Person"):
             data.append(row)
         return data
 
@@ -113,7 +112,10 @@ class Sql:
             persons[newperson.id] = newperson
         return persons
 
-    def get_all_families(self):
+    def get_all_persons(self):
+        return self.parse_all_persons(self.get_all_persons_raw())
+
+    def get_all_families_raw(self):
         data: list[
             tuple[
                 int,
@@ -128,7 +130,8 @@ class Sql:
                 str | None,
             ]
         ] = []
-        for row in self.__cursor.execute("SELECT * FROM Family"):
+        cursor = self.__sql_conn.cursor()
+        for row in cursor.execute("SELECT * FROM Family"):
             data.append(row)
         return data
 
@@ -161,7 +164,65 @@ class Sql:
             families[family[0]] = Family(family[0], persons[family[1]], persons[family[2]], childs, wedding_date)
         return families
 
+    def get_all_families(self):
+        return self.parse_all_families(self.get_all_families_raw(), self.get_all_persons())
+
+    def create_new_person(self, person: Person):
+        assert isinstance(person, Person)
+        person_list = self.parse_all_persons(self.get_all_persons_raw())
+        if person.id in person_list.keys():
+            new_id = 0
+            for i in person_list.keys():
+                if i > new_id:
+                    new_id = i
+            person.id = new_id
+        self.__sql_conn.cursor().execute(
+            """
+            INSERT INTO Person(Id,Name,FirstName,OldName,BirthDate,BirthLocation,DeathDate,DeathLocation,Job,Notes,AdditionalFiles)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?)
+        """,
+            (
+                person.id,
+                person.name,
+                person.first_name,
+                person.old_name,
+                person.get_birth_date(),
+                person.birth_location,
+                person.get_death_date(),
+                person.death_location,
+                person.job,
+                person.notes,
+                person.get_additional_files(as_string=True),
+            ),
+        )
+        self.__sql_conn.commit()
+
+    def edit_person(self, person: Person):
+        assert isinstance(person, Person)
+        assert person.id in self.get_all_persons().keys()
+        self.__sql_conn.cursor().execute(
+            "UPDATE FROM Person WHERE Id=? SET Name=?, FirstName=?, OldName=?, BirthDate=?, BirthLocation=?, DeathDate=?, DeathLocation=?, Job=?, Notes=?, AdditionalFiles=?",
+            (
+                person.id,
+                person.name,
+                person.first_name,
+                person.old_name,
+                person.get_birth_date(),
+                person.birth_location,
+                person.get_death_date(),
+                person.death_location,
+                person.job,
+                person.notes,
+                person.get_additional_files(),
+            ),
+        )
+
+    def delete_person(self, id: int):
+        assert isinstance(id, int)
+        assert id in self.get_all_persons().keys()
+        self.__sql_conn.cursor().execute("DELETE FROM Person WHERE Id=?", (id,))
+        self.__sql_conn.commit()
+
     def __del__(self):
-        self.__cursor.close()
         self.__sql_conn.close()
         pass
