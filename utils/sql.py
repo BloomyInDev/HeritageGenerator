@@ -1,6 +1,5 @@
 import sqlite3, os
-from utils.person import Person
-from utils.family import Family
+from utils.person import Person, Family
 from utils.date import Date, parse_date
 
 

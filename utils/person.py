@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Literal
 from utils.date import Date
 
 
@@ -31,18 +33,18 @@ class Person:
             self.old_name = None
 
         if isinstance(birth_date, Date):
-            self.__birth_date = birth_date
+            self.birth_date = birth_date
         else:
-            self.__birth_date = None
+            self.birth_date = None
         if isinstance(birth_location, str):
             self.birth_location = birth_location
         else:
             self.birth_location = None
 
         if isinstance(death_date, Date):
-            self.__death_date = birth_date
+            self.death_date = birth_date
         else:
-            self.__death_date = None
+            self.death_date = None
         if isinstance(death_location, str):
             self.death_location = death_location
         else:
@@ -55,25 +57,48 @@ class Person:
             self.notes = notes
         else:
             self.notes = None
+
         ## Reimplement additional files system
         # for e in additional_files:
         #    assert isinstance(e, str)
         # self.__additional_files = additional_files
         self.__additional_files: list[str] = []
+
+        self.attributes: list[tuple[Literal["dad", "mom", "child"], Family]] = []
         pass
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.name}"
 
     def get_birth_date(self) -> str | None:
-        if isinstance(self.__birth_date, Date):
-            return str(self.__birth_date)
+        if isinstance(self.birth_date, Date):
+            return str(self.birth_date)
         return None
 
+    def get_birth_str(self) -> str:
+        final_str = ""
+        if self.birth_date != None:
+            final_str += self.birth_date.get_str()
+            if self.birth_location != None:
+                final_str += ", "
+        if self.birth_location != None:
+            final_str += self.birth_location
+        return final_str
+
     def get_death_date(self) -> str | None:
-        if isinstance(self.__death_date, Date):
-            return str(self.__death_date)
+        if isinstance(self.death_date, Date):
+            return str(self.death_date)
         return None
+
+    def get_death_str(self) -> str:
+        final_str = ""
+        if self.death_date != None:
+            final_str += self.death_date.get_str()
+            if self.death_location != None:
+                final_str += ", "
+        if self.death_location != None:
+            final_str += self.death_location
+        return final_str
 
     def get_additional_files(self, as_string: bool = False) -> list[str] | str | None:
         if as_string:
@@ -97,3 +122,61 @@ class Sex:
 
     def get(self):
         return self.__sex
+
+
+class Family:
+    def __init__(
+        self,
+        id: int,
+        dad: Person,
+        mom: Person,
+        childs: list[Person],
+        wedding_date: Date | None = None,
+        wedding_location: str | None = None,
+        divorce_date: Date | None = None,
+        divorce_location: str | None = None,
+        notes: str | None = None,
+    ) -> None:
+        assert isinstance(id, int)
+        assert isinstance(mom, Person)
+        assert isinstance(dad, Person)
+        assert isinstance(childs, list)
+        self.__id: int = id
+        self.mom: Person = mom
+        self.dad: Person = dad
+        self.childs: list[Person] = []
+        for child in childs:
+            assert isinstance(child, Person)
+            self.childs.append(child)
+        if isinstance(wedding_date, Date):
+            self.__wedding__date = wedding_date
+        else:
+            self.__wedding__date = None
+        if isinstance(wedding_location, str):
+            self.wedding_location = wedding_location
+        else:
+            self.wedding_location = None
+        if isinstance(divorce_date, Date):
+            self.__divorce__date = divorce_date
+        else:
+            self.__divorce__date = None
+        if isinstance(divorce_location, str):
+            self.divorce_location = divorce_location
+        else:
+            self.divorce_location = None
+        if isinstance(notes, str):
+            self.notes = notes
+        else:
+            self.notes = None
+        pass
+
+
+## Example for Family class
+
+# "id":family[0],
+# "dad":persons[family[1]],
+# "mom":persons[family[2]],
+# "childs":childs,
+# "wedding":{"date":family[4],"location":family[5]},
+# "divorce":{"date":family[6],"location":family[7]},
+# "notes":

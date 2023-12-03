@@ -22,7 +22,7 @@ class Date:
         assert is_valid_date(self.__year, self.__month, self.__day), "date is invalid (1<=month<=12 or 1<=day<=last_day_of_month)"
         pass
 
-    def __str__(self) -> str:
+    def get_str(self, separator: str = "/"):
         day = str(self.__day)
         if len(day) == 1:
             day = f"0{day}"
@@ -30,7 +30,10 @@ class Date:
         if len(month) == 1:
             month = f"0{month}"
         year = str(self.__year)
-        return f"{day}/{month}/{year}"
+        return f"{day}{separator}{month}{separator}{year}"
+
+    def __str__(self) -> str:
+        return self.get_str("/")
 
     def get_day(self) -> int:
         return self.__day
