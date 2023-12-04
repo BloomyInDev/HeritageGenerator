@@ -8,7 +8,7 @@ sql = Sql("data.db")
 list_persons = sql.get_all_persons()
 list_families = sql.get_all_families()
 print(list_families)
-TreeGen(list_persons, list_families).gen_tree("pdf")
+TreeGen(list_persons, list_families).gen_tree("full", 1, "pdf")
 # dict_sizes = {}
 # for font in [("smol", Font.small), ("medium", Font.medium), ("big", Font.big), ("really_big", Font.really_big)]:
 #    dict_sizes[font[0]] = get_text_width("Bonjour", font[1])

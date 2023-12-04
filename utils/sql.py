@@ -156,7 +156,7 @@ class Sql:
         for family in to_parse:
             childs: list[Person] = []
             if family[3] != None:
-                for child_id in family[3]:
+                for child_id in str(family[3]).split(","):
                     childs.append(persons[int(child_id)])
             wedding_date: Date | None = None if family[4] is None else parse_date(family[4])
 
