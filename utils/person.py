@@ -141,7 +141,7 @@ class Family:
         assert isinstance(mom, Person)
         assert isinstance(dad, Person)
         assert isinstance(childs, list)
-        self.__id: int = id
+        self.id: int = id
         self.mom: Person = mom
         self.dad: Person = dad
         self.childs: list[Person] = []
@@ -149,17 +149,17 @@ class Family:
             assert isinstance(child, Person)
             self.childs.append(child)
         if isinstance(wedding_date, Date):
-            self.__wedding__date = wedding_date
+            self.wedding_date = wedding_date
         else:
-            self.__wedding__date = None
+            self.wedding_date = None
         if isinstance(wedding_location, str):
             self.wedding_location = wedding_location
         else:
             self.wedding_location = None
         if isinstance(divorce_date, Date):
-            self.__divorce__date = divorce_date
+            self.divorce_date = divorce_date
         else:
-            self.__divorce__date = None
+            self.divorce_date = None
         if isinstance(divorce_location, str):
             self.divorce_location = divorce_location
         else:
@@ -169,6 +169,36 @@ class Family:
         else:
             self.notes = None
         pass
+
+    def get_wedding_date(self) -> str | None:
+        if isinstance(self.wedding_date, Date):
+            return str(self.wedding_date)
+        return None
+
+    def get_wedding_str(self) -> str:
+        final_str = ""
+        if self.wedding_date != None:
+            final_str += self.wedding_date.get_str()
+            if self.wedding_location != None:
+                final_str += ", "
+        if self.wedding_location != None:
+            final_str += self.wedding_location
+        return final_str
+
+    def get_divorce_date(self) -> str | None:
+        if isinstance(self.divorce_date, Date):
+            return str(self.divorce_date)
+        return None
+
+    def get_divorce_str(self) -> str:
+        final_str = ""
+        if self.divorce_date != None:
+            final_str += self.divorce_date.get_str()
+            if self.divorce_location != None:
+                final_str += ", "
+        if self.divorce_location != None:
+            final_str += self.divorce_location
+        return final_str
 
 
 ## Example for Family class
