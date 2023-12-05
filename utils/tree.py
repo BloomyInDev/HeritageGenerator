@@ -3,7 +3,7 @@ from utils.person import Person, Family
 from utils.images import PersonCard, FamilyCard
 import graphviz, shutil, os, datetime  # type: ignore
 
-graphviz_supported_format = Literal["png", "pdf", "gif"]
+graphviz_supported_format = Literal["png", "pdf", "svg"]
 
 
 class TreeGen:
@@ -154,6 +154,6 @@ class TreeGen:
             dot (graphviz.Digraph): A Tree
             format (Literal[&quot;png&quot;, &quot;pdf&quot;]): Export file type
         """
-        new_filename = f"./data/tree.{datetime.datetime.now().isoformat('-').split('.')[0].replace(':', '-')}.{format}"
+        new_filename = f"./data/tree.{datetime.datetime.now().isoformat('-').split('.')[0].replace(':', '-')}.gv"
         dot.render(new_filename, view=open)  # type: ignore
-        return new_filename
+        return f"{new_filename}.{format}"

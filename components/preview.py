@@ -13,7 +13,7 @@ class PreviewWindow:
         self.w = tk.Toplevel(root_element)
 
         # Load the image and process it
-        self.image = Image.open("./data/tree.gv.png")
+        self.image = Image.open(img_path)
         max_res = (1152, 648)
         self.image.thumbnail(max_res, Image.Resampling.LANCZOS)
 

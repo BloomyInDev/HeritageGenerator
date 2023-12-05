@@ -1,38 +1,47 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-import time, multiprocessing
 from components.common import *
-from components.preview import PreviewWindow
+from windows.edit_person import EditPersonWindow
+from windows.gen_tree import GenTreeWindow
 from utils.sql import Sql
 from utils.tree import TreeGen
 
 
 class Ui:
     def __init__(self) -> None:
-        sql = Sql("data.db")
+        self.sql = Sql("data.db")
 
-        self.persons = sql.get_all_persons()
-        self.families = sql.get_all_families()
+        self.persons = self.sql.get_all_persons()
+        self.families = self.sql.get_all_families()
         self.tree = TreeGen(self.persons, self.families)
 
-        self.w = tk.Tk(title_formater(""))
+        self.w = tk.Tk()
+        self.w.title(title_formater(""))
         self.w.resizable(False, False)
         self.ui_define_core_of_the_window()
         pass
 
+    def refresh_data(self):
+        self.person = self.sql.get_all_persons()
+        self.families = self.sql.get_all_families()
+        self.tree.update_persons(self.persons, self.families)
+
     def ui_define_core_of_the_window(self):
-        generate_tree = ttk.Button(self.w, text=home_menu_btn_formater("Generate Tree"), width=22, command=self.generate_and_display_tree)
-        generate_tree.grid(row=0, column=0, columnspan=2, sticky=tk.NSEW)
+        add_person = ttk.Button(self.w, text=big_btn_formater("Add a person"), width=22, command=self.open_gentreewindow)
+        add_person.grid(row=0, column=0, sticky=tk.NSEW)
+        edit_person = ttk.Button(self.w, text=big_btn_formater("Edit a person"), width=22, command=self.open_editpersonwindow)
+        edit_person.grid(row=0, column=1, sticky=tk.NSEW)
+        generate_tree = ttk.Button(self.w, text=big_btn_formater("Generate Tree"), width=22, command=self.open_gentreewindow)
+        generate_tree.grid(row=1, column=0, columnspan=2, sticky=tk.NSEW)
         pass
 
-    def generate_and_display_tree(self):
-        file_path = self.tree.gen_tree("full", None, "png", False)
-        if file_path != None:
-            PreviewWindow(self.w, file_path)
+    def open_editpersonwindow(self):
+        EditPersonWindow(self.w, self.persons)
+
+    def open_gentreewindow(self):
+        GenTreeWindow(self.w, self.tree)
 
 
 if __name__ == "__main__":
-    ctx = multiprocessing.get_context("spawn")
-    q = ctx.Queue()
     Ui()
     tk.mainloop()
