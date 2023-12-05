@@ -1,7 +1,9 @@
 from typing import Literal
 from utils.person import Person, Family
 from utils.images import PersonCard, FamilyCard
-import graphviz, shutil, datetime  # type: ignore
+import graphviz, shutil, os, datetime  # type: ignore
+
+graphviz_supported_format = Literal["png", "pdf", "gif"]
 
 
 class TreeGen:
@@ -78,18 +80,18 @@ class TreeGen:
         for family_id in self.__families.keys():
             FamilyCard(self.__families[family_id], prepare_image=True).save()
 
-    def gen_tree(self, tree_type: Literal["full", "ancestors", "descendants"], person_id: int | None, format: Literal["png", "pdf"] = "pdf"):
+    def gen_tree(self, tree_type: Literal["full", "ancestors", "descendants"], person_id: int | None, format: graphviz_supported_format = "pdf", open: bool = False):
         match tree_type:
             case "full":
-                return self.__gen_full_tree(format)
+                return self.__gen_full_tree(format, open)
             case "ancestors":
                 assert isinstance(person_id, int)
-                return self.__gen_ancestors_tree(person_id, format)
+                return self.__gen_ancestors_tree(person_id, format, open)
             case "descendants":
                 assert isinstance(person_id, int)
-                return self.__gen_descendants_tree(person_id, format)
+                return self.__gen_descendants_tree(person_id, format, open)
 
-    def __gen_full_tree(self, format: Literal["png", "pdf"]):
+    def __gen_full_tree(self, format: graphviz_supported_format, open: bool = False):
         """
         Generate the Family Tree of everyone
 
@@ -111,9 +113,9 @@ class TreeGen:
                     dot.edge(f"P{person.id}{person.first_name.lower()}", f"F{person_attributes[1].id}")  # type: ignore
                 elif person_attributes[0] == "child":
                     dot.edge(f"F{person_attributes[1].id}", f"P{person.id}{person.first_name.lower()}")  # type: ignore
-        self.__render_and_save_tree(dot, format)
+        return self.__render_and_save_tree(dot, format, open)
 
-    def __gen_ancestors_tree(self, person_id: int, format: Literal["png", "pdf"]):
+    def __gen_ancestors_tree(self, person_id: int, format: graphviz_supported_format, open: bool = False):
         """
         Generate the Family Tree of the ancestor of person_id
 
@@ -138,13 +140,13 @@ class TreeGen:
                         dot.node(f"F{attribute[1].id}", " ", image=f"./cards/f{attribute[1].id}.png")  # type: ignore
                         dot.edge(f"P{person.id}{person.first_name.lower()}", f"F{attribute[1].id}")  # type: ignore
             persons = new_list_person
-        self.__render_and_save_tree(dot, format)
+        return self.__render_and_save_tree(dot, format, open)
 
-    def __gen_descendants_tree(self, person_id: int, format: Literal["png", "pdf"]):
+    def __gen_descendants_tree(self, person_id: int, format: graphviz_supported_format, open: bool = False):
         assert person_id in self.__persons.keys()
         pass
 
-    def __render_and_save_tree(self, dot: graphviz.Digraph, format: Literal["png", "pdf"]):
+    def __render_and_save_tree(self, dot: graphviz.Digraph, format: graphviz_supported_format, open: bool = False):
         """
         Save a Tree
 
@@ -152,10 +154,6 @@ class TreeGen:
             dot (graphviz.Digraph): A Tree
             format (Literal[&quot;png&quot;, &quot;pdf&quot;]): Export file type
         """
-        dot.render("./data/tree.gv", view=False)  # type: ignore
-        try:
-            shutil.copy2(f"./data/tree.gv.{format}", f"./data/tree.{datetime.datetime.now().isoformat('-').split('.')[0].replace(':', '-')}.{format}")
-        except PermissionError:
-            print("Can't copy the file, pass")
-            pass
-        pass
+        new_filename = f"./data/tree.{datetime.datetime.now().isoformat('-').split('.')[0].replace(':', '-')}.{format}"
+        dot.render(new_filename, view=open)  # type: ignore
+        return new_filename

@@ -16,8 +16,8 @@
             "name": "Python: UI file",
             "type": "python",
             "request": "launch",
-            "program": "ui-tests.py",
-            "console": "externalTerminal",
+            "program": "ui.py",
+            "console": "integratedTerminal",
             "justMyCode": true
         }
     ]
