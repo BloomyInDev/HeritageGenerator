@@ -20,6 +20,18 @@ class TreeGen:
         self.__initialize_persons()
         pass
 
+    def get_persons(self):
+        """
+        Get Persons
+        """
+        return self.__persons
+
+    def get_families(self):
+        """
+        Get Families
+        """
+        return self.__families
+
     def __initialize_persons(self):
         """
         Simple helper method to set all Person theirs family links
@@ -108,6 +120,7 @@ class TreeGen:
             dot.node(f"F{family.id}", " ", image=f"./cards/f{family.id}.png")  # type: ignore
         for person_id in self.__persons.keys():
             person = self.__persons[person_id]
+            print(f"Debug => {person.id},{person.attributes}")
             for person_attributes in person.attributes:
                 if person_attributes[0] == "dad" or person_attributes[0] == "mom":
                     dot.edge(f"P{person.id}{person.first_name.lower()}", f"F{person_attributes[1].id}")  # type: ignore
@@ -127,24 +140,45 @@ class TreeGen:
         self.gen_cards()
         dot = graphviz.Digraph("Tree", format=format, node_attr={"shape": "plaintext"})
         persons: list[Person] = [self.__persons[person_id]]
-
         while len(persons) != 0:
             for person in persons:
                 dot.node(f"P{person.id}{person.first_name.lower()}", " ", image=f"./cards/p{person.id}{person.first_name.lower()}.png")  # type: ignore
             new_list_person: list[Person] = []
+            print(persons)
             for person in persons:
+                print(f"Debug => {person.id},{person.attributes}")
                 for attribute in person.attributes:
                     if attribute[0] == "child":
-                        new_list_person.append(attribute[1].dad)
-                        new_list_person.append(attribute[1].mom)
+                        new_list_person.append(self.__persons[attribute[1].dad.id])
+                        new_list_person.append(self.__persons[attribute[1].mom.id])
                         dot.node(f"F{attribute[1].id}", " ", image=f"./cards/f{attribute[1].id}.png")  # type: ignore
-                        dot.edge(f"P{person.id}{person.first_name.lower()}", f"F{attribute[1].id}")  # type: ignore
+                        dot.edge(f"F{attribute[1].id}", f"P{person.id}{person.first_name.lower()}")  # type: ignore
+                        dot.edge(f"P{attribute[1].dad.id}{attribute[1].dad.first_name.lower()}", f"F{attribute[1].id}")  # type: ignore
+                        dot.edge(f"P{attribute[1].mom.id}{attribute[1].mom.first_name.lower()}", f"F{attribute[1].id}")  # type: ignore
             persons = new_list_person
         return self.__render_and_save_tree(dot, format, open)
 
     def __gen_descendants_tree(self, person_id: int, format: graphviz_supported_format, open: bool = False):
         assert person_id in self.__persons.keys()
-        pass
+        self.gen_cards()
+        dot = graphviz.Digraph("Tree", format=format, node_attr={"shape": "plaintext"})
+        persons: list[Person] = [self.__persons[person_id]]
+        while len(persons) != 0:
+            for person in persons:
+                dot.node(f"P{person.id}{person.first_name.lower()}", " ", image=f"./cards/p{person.id}{person.first_name.lower()}.png")  # type: ignore
+            new_list_person: list[Person] = []
+            print(persons)
+            for person in persons:
+                print(f"Debug => {person.id},{person.attributes}")
+                for attribute in person.attributes:
+                    if attribute[0] == "dad" or attribute[0] == "mom":
+                        for child in attribute[1].childs:
+                            new_list_person.append(self.__persons[child.id])
+                            dot.edge(f"F{attribute[1].id}", f"P{child.id}{child.first_name.lower()}")  # type: ignore
+                        dot.node(f"F{attribute[1].id}", " ", image=f"./cards/f{attribute[1].id}.png")  # type: ignore
+                        dot.edge(f"P{person.id}{person.first_name.lower()}", f"F{attribute[1].id}")  # type: ignore
+            person = new_list_person
+        return self.__render_and_save_tree(dot, format, open)
 
     def __render_and_save_tree(self, dot: graphviz.Digraph, format: graphviz_supported_format, open: bool = False):
         """

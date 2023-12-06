@@ -1,12 +1,14 @@
 import tkinter as tk
+from typing import Callable
 from utils.person import Person
 from components.select_person import SelectPerson
 from components.person_data_display import PersonDataDisplay
 
 
-class EditPersonWindow:
-    def __init__(self, root: tk.Tk, list_person: dict[int, Person]) -> None:
+class SelectPersonWindow:
+    def __init__(self, root: tk.Tk, list_person: dict[int, Person], return_zone: Callable[[int], None]) -> None:
         self.w = tk.Toplevel(root)
+        self.__return_zone = return_zone
         self.__persons = list_person
         self.person_selected: Person
         self.select_person = SelectPerson(self.w, list_person)
@@ -24,4 +26,5 @@ class EditPersonWindow:
         self.right_part.w.grid(row=0, column=1, sticky=tk.NSEW)
 
     def validate(self, person_id: int):
-        print(person_id)
+        self.__return_zone(person_id)
+        self.w.destroy()
