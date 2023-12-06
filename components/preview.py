@@ -29,7 +29,7 @@ class PreviewWindow:
 
         # Setup others things
         self.txt = ttk.Label(self.w, text="Preview")
-        self.txt.grid(row=0, column=0)
+        self.txt.grid(row=0, column=0, sticky=tk.W, ipadx=2)
         self.btn = ttk.Button(self.w, text="Close", command=lambda: self.w.destroy())
         self.btn.grid(row=0, column=1, sticky=tk.E, ipadx=2)
         self.sep = ttk.Separator(self.w, orient="horizontal")

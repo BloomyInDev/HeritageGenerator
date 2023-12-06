@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from utils.tree import TreeGen
-from components.common import big_btn_formater
+from components.common import big_btn_formater, title_formater
 from components.preview import PreviewWindow
 
 types_of_trees = {"full": "All persons", "ancestors": "Ancestors of a person", "descendants": "Descendants of a person"}
@@ -14,6 +14,7 @@ class GenTreeWindow:
         self.tree = tree
         self.w = tk.Toplevel(root)
         self.w.resizable(False, False)
+        self.w.title(title_formater("Generate Tree"))
         self.tree_menu_btn = ttk.Menubutton(self.w, text="Type of tree")
         self.tree_menu = tk.Menu(self.tree_menu_btn, tearoff=0)
         self.selected_item_tree_menu = tk.StringVar()
