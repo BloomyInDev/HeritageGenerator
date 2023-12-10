@@ -114,10 +114,10 @@ class TreeGen:
         dot = graphviz.Digraph("Tree", format=format, node_attr={"shape": "plaintext"})
         for person_id in self.__persons.keys():
             person = self.__persons[person_id]
-            dot.node(f"P{person.id}{person.first_name.lower()}", " ", image=f"./cards/p{person.id}{person.first_name.lower()}.png")  # type: ignore
+            dot.node(f"P{person.id}{person.first_name.lower()}", " ", image=f"../cards/p{person.id}{person.first_name.lower()}.png")  # type: ignore
         for family_id in self.__families.keys():
             family = self.__families[family_id]
-            dot.node(f"F{family.id}", " ", image=f"./cards/f{family.id}.png")  # type: ignore
+            dot.node(f"F{family.id}", " ", image=f"../cards/f{family.id}.png")  # type: ignore
         for person_id in self.__persons.keys():
             person = self.__persons[person_id]
             print(f"Debug => {person.id},{person.attributes}")
@@ -142,16 +142,16 @@ class TreeGen:
         persons: list[Person] = [self.__persons[person_id]]
         while len(persons) != 0:
             for person in persons:
-                dot.node(f"P{person.id}{person.first_name.lower()}", " ", image=f"./cards/p{person.id}{person.first_name.lower()}.png")  # type: ignore
+                dot.node(f"P{person.id}{person.first_name.lower()}", " ", image=f"../cards/p{person.id}{person.first_name.lower()}.png")  # type: ignore
             new_list_person: list[Person] = []
-            print(persons)
+            print(f"Debug => {persons}")
             for person in persons:
-                print(f"Debug => {person.id},{person.attributes}")
+                # print(f"Debug => {person.id},{person.attributes}")
                 for attribute in person.attributes:
                     if attribute[0] == "child":
                         new_list_person.append(self.__persons[attribute[1].dad.id])
                         new_list_person.append(self.__persons[attribute[1].mom.id])
-                        dot.node(f"F{attribute[1].id}", " ", image=f"./cards/f{attribute[1].id}.png")  # type: ignore
+                        dot.node(f"F{attribute[1].id}", " ", image=f"../cards/f{attribute[1].id}.png")  # type: ignore
                         dot.edge(f"F{attribute[1].id}", f"P{person.id}{person.first_name.lower()}")  # type: ignore
                         dot.edge(f"P{attribute[1].dad.id}{attribute[1].dad.first_name.lower()}", f"F{attribute[1].id}")  # type: ignore
                         dot.edge(f"P{attribute[1].mom.id}{attribute[1].mom.first_name.lower()}", f"F{attribute[1].id}")  # type: ignore
@@ -165,20 +165,25 @@ class TreeGen:
         persons: list[Person] = [self.__persons[person_id]]
         while len(persons) != 0:
             for person in persons:
-                dot.node(f"P{person.id}{person.first_name.lower()}", " ", image=f"./cards/p{person.id}{person.first_name.lower()}.png")  # type: ignore
-            new_list_person: list[Person] = []
-            print(persons)
+                dot.node(f"P{person.id}{person.first_name.lower()}", " ", image=f"../cards/p{person.id}{person.first_name.lower()}.png")  # type: ignore
+            new_person_list: list[Person] = []
+            print(f"Debug => {self.__print_person_list(persons)}")
             for person in persons:
-                print(f"Debug => {person.id},{person.attributes}")
                 for attribute in person.attributes:
-                    if attribute[0] == "dad" or attribute[0] == "mom":
-                        for child in attribute[1].childs:
-                            new_list_person.append(self.__persons[child.id])
-                            dot.edge(f"F{attribute[1].id}", f"P{child.id}{child.first_name.lower()}")  # type: ignore
-                        dot.node(f"F{attribute[1].id}", " ", image=f"./cards/f{attribute[1].id}.png")  # type: ignore
+                    if attribute[0] in ["dad", "mom"]:
+                        dot.node(f"F{attribute[1].id}", " ", image=f"../cards/f{attribute[1].id}.png")  # type: ignore
                         dot.edge(f"P{person.id}{person.first_name.lower()}", f"F{attribute[1].id}")  # type: ignore
-            person = new_list_person
+                        for child in attribute[1].childs:
+                            new_person_list.append(self.__persons[child.id])
+                            dot.edge(f"F{attribute[1].id}", f"P{child.id}{child.first_name.lower()}")  # type: ignore
+            persons = new_person_list
         return self.__render_and_save_tree(dot, format, open)
+
+    def __print_person_list(self, list_persons: list[Person]):
+        newlist: list[str] = []
+        for person in list_persons:
+            newlist.append(str(person))
+        return newlist
 
     def __render_and_save_tree(self, dot: graphviz.Digraph, format: graphviz_supported_format, open: bool = False):
         """
@@ -188,6 +193,6 @@ class TreeGen:
             dot (graphviz.Digraph): A Tree
             format (Literal[&quot;png&quot;, &quot;pdf&quot;]): Export file type
         """
-        new_filename = f"./data/tree.{datetime.datetime.now().isoformat('-').split('.')[0].replace(':', '-')}.gv"
+        new_filename = f"./temp/trees/tree.{datetime.datetime.now().isoformat('-').split('.')[0].replace(':', '-')}.gv"
         dot.render(new_filename, view=open)  # type: ignore
         return f"{new_filename}.{format}"

@@ -14,7 +14,7 @@ class PersonCard:
     def __init__(self, person: Person, image: str = "./assets/person.png", prepare_image: bool = False) -> None:
         assert isinstance(person, Person)
         assert isinstance(image, str)
-        assert os.path.isfile(image)
+        # assert os.path.isfile(image)
         self.__img = Image.new("RGBA", (800, 500), (255, 255, 255, 0))
         self.__img_person = image
         self.__person = person
@@ -41,11 +41,11 @@ class PersonCard:
         draw_zone.text((24, 442), self.__person.get_death_str(), (0, 0, 0), Font.small)  # type: ignore
 
     def save(self):
-        if not os.path.exists("./data"):
-            os.mkdir("./data")
-        if not os.path.exists("./data/cards"):
-            os.mkdir("./data/cards")
-        self.__img.save(f"./data/cards/p{self.__person.id}{self.__person.first_name.lower()}.png", "PNG")
+        if not os.path.exists("./temp"):
+            os.mkdir("./temp")
+        if not os.path.exists("./temp/cards"):
+            os.mkdir("./temp/cards")
+        self.__img.save(f"./temp/cards/p{self.__person.id}{self.__person.first_name.lower()}.png", "PNG")
 
 
 class ProfilePicture:
@@ -67,11 +67,11 @@ class ProfilePicture:
         self.__img_obj = new_img_obj
 
     def save(self):
-        if not os.path.exists("./data"):
-            os.mkdir("./data")
-        if not os.path.exists("./data/pp"):
-            os.mkdir("./data/pp")
-        self.__img_obj.save(f"./data/pp/{self.__person.id}{self.__person.first_name.lower()}.png", "PNG")
+        if not os.path.exists("./temp"):
+            os.mkdir("./temp")
+        if not os.path.exists("./temp/pp"):
+            os.mkdir("./temp/pp")
+        self.__img_obj.save(f"./temp/pp/{self.__person.id}{self.__person.first_name.lower()}.png", "PNG")
 
 
 class FamilyCard:
@@ -105,11 +105,11 @@ class FamilyCard:
         draw_zone.text(((self.__img.width // 2) - (wedding_width // 2), 118), self.__family.get_divorce_str(), (0, 0, 0), Font.medium)  # type: ignore
 
     def save(self):
-        if not os.path.exists("./data"):
-            os.mkdir("./data")
-        if not os.path.exists("./data/cards"):
-            os.mkdir("./data/cards")
-        self.__img.save(f"./data/cards/f{self.__family.id}.png", "PNG")
+        if not os.path.exists("./temp"):
+            os.mkdir("./temp")
+        if not os.path.exists("./temp/cards"):
+            os.mkdir("./temp/cards")
+        self.__img.save(f"./temp/cards/f{self.__family.id}.png", "PNG")
 
 
 def get_text_width(text: str, font: ImageFont.FreeTypeFont) -> int:
@@ -123,6 +123,6 @@ def get_text_width(text: str, font: ImageFont.FreeTypeFont) -> int:
     im: Image.Image = Image.new("RGB", (width, height), back_ground_color)
     draw = ImageDraw.Draw(im)
     draw.text((0, 0), text, font=font, fill=font_color)  # type: ignore
-    im.save("./data/temp.png")
-    box: tuple[int, int, int, int] = Image.open("./data/temp.png").getbbox()  # type: ignore
+    im.save("./temp/temp.png")
+    box: tuple[int, int, int, int] = Image.open("./temp/temp.png").getbbox()  # type: ignore
     return box[2] - box[0]

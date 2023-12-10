@@ -1,0 +1,31 @@
+{
+    "home": {
+        "add-person": "Add a person",
+        "edit-person": "Edit a person",
+        "gen-tree": "Generate Tree"
+    },
+    "gen-tree": {
+        "title": "Generate Tree",
+        "type-btn": "Type of tree",
+        "types": {
+            "full": "All persons",
+            "ancestors": "Ancestors of a person",
+            "descendants": "Descendants of a person"
+        },
+        "format-btn": "Export format",
+        "format": {
+            "preview": "Show a preview",
+            "pdf": "Export as a PDF",
+            "png": "Export as a PNG (Image)",
+            "svg": "Export as a SVG"
+        },
+        "select-person-btn": "Select a person",
+        "generate-btn": "Generate !",
+        "error": {
+            "no-person-selected": "You need to specify a Person for this tree type"
+        }
+    },
+    "add-person": {
+        "title": "Add a person"
+    }
+}

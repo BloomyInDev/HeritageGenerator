@@ -161,4 +161,5 @@ cython_debug/
 
 # Other things related to this project
 data.db
-data/
+temp/
+config.json

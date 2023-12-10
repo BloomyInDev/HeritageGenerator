@@ -38,22 +38,22 @@ class LabelAndEntry:
 
 
 class LabelAndDate:
-    def __init__(self, root: tk.BaseWidget, label_name: str) -> None:
+    def __init__(self, root: tk.BaseWidget, label_name: str, date: Date | None = None) -> None:
         self.w = tk.Frame(root)
         self.__label = ttk.Label(self.w, text=label_name)
         self.__label.grid(row=0, column=0)
         self.__var: dict[Literal["day"] | Literal["month"] | Literal["year"], tk.StringVar] = {"day": tk.StringVar(), "month": tk.StringVar(), "year": tk.StringVar()}
         self.__entries = {
-            "day": ttk.Spinbox(self.w, from_=1, to=31, wrap=True, textvariable=self.__var["day"]),
-            "month": ttk.Spinbox(self.w, from_=1, to=12, wrap=True, textvariable=self.__var["day"]),
-            "year": ttk.Spinbox(self.w, from_=1, to=float(datetime.datetime.now().year), wrap=True, textvariable=self.__var["day"]),
+            "day": ttk.Spinbox(self.w, from_=1, to=31, wrap=True, textvariable=self.__var["day"], width=5),
+            "month": ttk.Spinbox(self.w, from_=1, to=12, wrap=True, textvariable=self.__var["month"], width=5),
+            "year": ttk.Spinbox(self.w, from_=1, to=float(datetime.datetime.now().year), wrap=True, textvariable=self.__var["year"], width=5),
         }
         self.__spacers = (ttk.Label(self.w, text="/"), ttk.Label(self.w, text="/"))
         self.__entries["day"].grid(row=0, column=1, sticky=tk.EW)
         self.__spacers[0].grid(row=0, column=2, sticky=tk.EW)
-        self.__entries["day"].grid(row=0, column=3, sticky=tk.EW)
+        self.__entries["month"].grid(row=0, column=3, sticky=tk.EW)
         self.__spacers[1].grid(row=0, column=4, sticky=tk.EW)
-        self.__entries["day"].grid(row=0, column=5, sticky=tk.EW)
+        self.__entries["year"].grid(row=0, column=5, sticky=tk.EW)
         pass
 
     def get(self):
@@ -69,6 +69,55 @@ class LabelAndDate:
         self.__var["month"].set(str(month))
         self.__var["year"].set(str(year))
         pass
+
+
+class DateEntry:
+    def __init__(self, root: tk.BaseWidget, date: Date | None = None) -> None:
+        self.w = tk.Frame(root)
+        self.__var: dict[Literal["day"] | Literal["month"] | Literal["year"], tk.StringVar] = {"day": tk.StringVar(), "month": tk.StringVar(), "year": tk.StringVar()}
+        self.__entries = {
+            "day": ttk.Spinbox(self.w, from_=1, to=31, wrap=True, textvariable=self.__var["day"], width=5),
+            "month": ttk.Spinbox(self.w, from_=1, to=12, wrap=True, textvariable=self.__var["month"], width=5),
+            "year": ttk.Spinbox(self.w, from_=1, to=float(datetime.datetime.now().year), wrap=True, textvariable=self.__var["year"], width=5),
+        }
+        self.__spacers = (ttk.Label(self.w, text="/"), ttk.Label(self.w, text="/"))
+        self.__entries["day"].grid(row=0, column=0, sticky=tk.EW)
+        self.__spacers[0].grid(row=0, column=1, sticky=tk.EW)
+        self.__entries["month"].grid(row=0, column=2, sticky=tk.EW)
+        self.__spacers[1].grid(row=0, column=3, sticky=tk.EW)
+        self.__entries["year"].grid(row=0, column=4, sticky=tk.EW)
+        pass
+
+    def get(self):
+        return Date(int(self.__var["day"].get()), int(self.__var["month"].get()), int(self.__var["year"].get()))
+
+    def set_with_Date(self, date: Date):
+        self.__var["day"].set(str(date.get_day()))
+        self.__var["month"].set(str(date.get_month()))
+        self.__var["year"].set(str(date.get_year()))
+
+    def set(self, day: int, month: int, year: int):
+        self.__var["day"].set(str(day))
+        self.__var["month"].set(str(month))
+        self.__var["year"].set(str(year))
+        pass
+
+
+class Entry:
+    def __init__(self, root: tk.BaseWidget, default_value: str | None = None, readonly: bool = False):
+        self.__entry_var = tk.StringVar()
+        self.w = ttk.Entry(root, textvariable=self.__entry_var)
+        if readonly:
+            self.w.configure(state="readonly")
+        if default_value != None:
+            self.__entry_var.set(default_value)
+        pass
+
+    def get(self):
+        return self.__entry_var.get()
+
+    def set(self, x: str):
+        return self.__entry_var.set(x)
 
 
 class Button:

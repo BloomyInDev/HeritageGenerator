@@ -1,7 +1,7 @@
 import tkinter as tk
 from utils.person import Person
 from components.select_person import SelectPerson
-from components.person_data_display import PersonDataDisplay
+from components.person_data import PersonDataEditor
 
 
 class EditPersonWindow:
@@ -12,7 +12,7 @@ class EditPersonWindow:
         self.select_person = SelectPerson(self.w, list_person)
         self.select_person.w.grid(row=0, column=0)
         self.select_person.selected_person_id.watch_changes(self.on_change)
-        self.right_part: PersonDataDisplay | None = None
+        self.right_part: PersonDataEditor | None = None
         pass
 
     def on_change(self):
@@ -20,8 +20,8 @@ class EditPersonWindow:
         if self.right_part != None:
             self.right_part.w.destroy()
         print("Changing person")
-        self.right_part = PersonDataDisplay(self.w, self.person_selected, self.validate)
+        self.right_part = PersonDataEditor(self.w, self.person_selected, self.validate)
         self.right_part.w.grid(row=0, column=1, sticky=tk.NSEW)
 
-    def validate(self, person_id: int):
-        print(person_id)
+    def validate(self, person: Person):
+        print(str(person))

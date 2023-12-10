@@ -19,19 +19,17 @@ class PreviewWindow:
 
         # Settings for the new window
         self.w.resizable(False, False)
-        self.w.geometry(f"{self.image.width+5}x{self.image.height+32}")
+        self.w.geometry(f"{self.image.width}x{self.image.height}")
         self.w.title(title_formater("Tree preview"))
+        self.w.bind("<Escape>", lambda event: self.w.destroy())
+
+        # Setup the Menu
+        self.menu = tk.Menu(self.w, tearoff=False)
+        self.w.configure(menu=self.menu)
+        self.menu.add_command(label="Close", command=lambda: self.w.destroy())
 
         # Setup the image displayer
         self.tk_image = ImageTk.PhotoImage(self.image)
         self.image_displayer = ttk.Label(self.w, image=self.tk_image)
-        self.image_displayer.grid(row=2, column=0, columnspan=2, sticky=tk.NSEW)
-
-        # Setup others things
-        self.txt = ttk.Label(self.w, text="Preview")
-        self.txt.grid(row=0, column=0, sticky=tk.W, ipadx=2)
-        self.btn = ttk.Button(self.w, text="Close", command=lambda: self.w.destroy())
-        self.btn.grid(row=0, column=1, sticky=tk.E, ipadx=2)
-        self.sep = ttk.Separator(self.w, orient="horizontal")
-        self.sep.grid(row=1, column=0, columnspan=2, sticky=tk.EW)
+        self.image_displayer.grid(row=0, column=0, sticky=tk.NSEW)
         pass

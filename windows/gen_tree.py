@@ -3,7 +3,7 @@ import tkinter.ttk as ttk
 from tkinter.messagebox import showerror  # type: ignore
 from utils.tree import TreeGen
 from components.common import big_btn_formater, title_formater
-from components.preview import PreviewWindow
+from windows.preview import PreviewWindow
 from windows.select_person import SelectPersonWindow
 
 types_of_trees = {"full": "All persons", "ancestors": "Ancestors of a person", "descendants": "Descendants of a person"}
@@ -17,7 +17,10 @@ class GenTreeWindow:
         self.w = tk.Toplevel(root)
         self.w.resizable(False, False)
         self.w.title(title_formater("Generate Tree"))
-        self.tree_menu_btn = ttk.Menubutton(self.w, text="Type of tree")
+        self.w.bind("<Escape>", lambda event: self.w.destroy())
+        self.frame = ttk.Frame(self.w)
+        self.frame.grid(row=0, column=0, pady=5, padx=5)
+        self.tree_menu_btn = ttk.Menubutton(self.frame, text="Type of tree")
         self.tree_menu = tk.Menu(self.tree_menu_btn, tearoff=0)
         self.selected_item_tree_menu = tk.StringVar()
         self.selected_item_tree_menu.set("full")
@@ -27,7 +30,7 @@ class GenTreeWindow:
         self.tree_menu_btn["menu"] = self.tree_menu
         self.tree_menu_btn.grid(row=0, column=0)
 
-        self.format_menu_btn = ttk.Menubutton(self.w, text="Export format")
+        self.format_menu_btn = ttk.Menubutton(self.frame, text="Export format")
         self.format_menu = tk.Menu(self.format_menu_btn, tearoff=0)
         self.selected_item_format_menu = tk.StringVar()
         self.selected_item_format_menu.set("preview")
@@ -37,9 +40,9 @@ class GenTreeWindow:
         self.format_menu_btn["menu"] = self.format_menu
         self.format_menu_btn.grid(row=1, column=0, columnspan=2, sticky=tk.EW)
         self.person_choosen: int | None = None
-        self.choose_person = ttk.Button(self.w, text="Select a person", command=lambda: SelectPersonWindow(root, self.tree.get_persons(), self.update_selected_person))
+        self.choose_person = ttk.Button(self.frame, text="Select a person", command=lambda: SelectPersonWindow(root, self.tree.get_persons(), self.update_selected_person))
         self.choose_person.grid(row=0, column=1)
-        self.btn = ttk.Button(self.w, text=big_btn_formater("Generate !"), command=self.generate_and_display_tree)
+        self.btn = ttk.Button(self.frame, text=big_btn_formater("Generate !"), command=self.generate_and_display_tree)
         self.btn.grid(row=2, column=0, columnspan=2, sticky=tk.EW)
         self.update_selected_tree_menu()  # type: ignore
         pass
@@ -62,10 +65,10 @@ class GenTreeWindow:
         else:
             person_id = self.person_choosen
         print(self.selected_item_format_menu.get())
+        print(f'Generate "{self.selected_item_tree_menu.get()}" tree {f"for {str(self.tree.get_persons()[self.person_choosen])}" if self.person_choosen != None else ""}')
         if self.selected_item_format_menu.get() == "preview":
             print("In preview mode")
             file_path = self.tree.gen_tree(self.selected_item_tree_menu.get(), person_id, "png", False)  # type: ignore
-            if file_path != None:
-                PreviewWindow(self.__root, file_path)
+            PreviewWindow(self.__root, file_path)
         else:
             file_path = self.tree.gen_tree(self.selected_item_tree_menu.get(), person_id, self.selected_item_format_menu.get(), True)  # type: ignore
