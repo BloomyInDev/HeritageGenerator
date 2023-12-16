@@ -80,6 +80,9 @@ class DateEntry:
             "month": ttk.Spinbox(self.w, from_=1, to=12, wrap=True, textvariable=self.__var["month"], width=5),
             "year": ttk.Spinbox(self.w, from_=1, to=float(datetime.datetime.now().year), wrap=True, textvariable=self.__var["year"], width=5),
         }
+        self.__var["day"].set(str(date.get_day()) if date != None else "0")
+        self.__var["month"].set(str(date.get_month()) if date != None else "0")
+        self.__var["year"].set(str(date.get_year()) if date != None else "0")
         self.__spacers = (ttk.Label(self.w, text="/"), ttk.Label(self.w, text="/"))
         self.__entries["day"].grid(row=0, column=0, sticky=tk.EW)
         self.__spacers[0].grid(row=0, column=1, sticky=tk.EW)
@@ -89,7 +92,7 @@ class DateEntry:
         pass
 
     def get(self):
-        return Date(int(self.__var["day"].get()), int(self.__var["month"].get()), int(self.__var["year"].get()))
+        return Date(int(self.__var["day"].get()), int(self.__var["month"].get()), int(self.__var["year"].get()), ignoreassert=True)
 
     def set_with_Date(self, date: Date):
         self.__var["day"].set(str(date.get_day()))

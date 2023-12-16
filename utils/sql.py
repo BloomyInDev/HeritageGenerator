@@ -205,9 +205,8 @@ class Sql:
         assert isinstance(person, Person)
         assert person.id in self.get_all_persons().keys()
         self.__sql_conn.cursor().execute(
-            "UPDATE FROM Person WHERE Id=? SET Name=?, FirstName=?, OldName=?, BirthDate=?, BirthLocation=?, DeathDate=?, DeathLocation=?, Job=?, Notes=?, AdditionalFiles=?",
+            f"UPDATE Person SET Name=?, FirstName=?, OldName=?, BirthDate=?, BirthLocation=?, DeathDate=?, DeathLocation=?, Job=?, Notes=?, AdditionalFiles=? WHERE Id={person.id}",
             (
-                person.id,
                 person.name,
                 person.first_name,
                 person.old_name,
@@ -217,9 +216,10 @@ class Sql:
                 person.death_location,
                 person.job,
                 person.notes,
-                person.get_additional_files(),
+                person.get_additional_files(as_string=True),
             ),
         )
+        self.__sql_conn.commit()
 
     def delete_person(self, id: int):
         assert isinstance(id, int)

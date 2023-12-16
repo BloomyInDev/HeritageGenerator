@@ -18,7 +18,13 @@ class Config:
     def save(self):
         with open("./config.json", "w") as f:
             json.dump(self.cfg, f, indent=4)
-
+    
+    def get(self,path:list[str]):
+        p = path
+        result = self.cfg
+        while len(p) != 0:
+            result = result[p[0]]
+            p.pop(0)
 
 class Language:
     def __init__(self, lang: str) -> None:

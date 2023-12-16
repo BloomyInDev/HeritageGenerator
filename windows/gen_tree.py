@@ -18,6 +18,7 @@ class GenTreeWindow:
         self.w.resizable(False, False)
         self.w.title(title_formater("Generate Tree"))
         self.w.bind("<Escape>", lambda event: self.w.destroy())
+        self.w.focus()
         self.frame = ttk.Frame(self.w)
         self.frame.grid(row=0, column=0, pady=5, padx=5)
         self.tree_menu_btn = ttk.Menubutton(self.frame, text="Type of tree")

@@ -17,7 +17,8 @@ class AboutWindow:
         self.w.resizable(False, False)
         self.w.title(title_formater("About"))
         self.w.bind("<Escape>", lambda event: self.w.destroy())
-
+        self.w.focus()
+        
         # Setup the image displayer
         self.tk_image = ImageTk.PhotoImage(self.image)
         self.image_displayer = ttk.Label(self.w, image=self.tk_image)

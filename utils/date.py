@@ -1,5 +1,5 @@
 class Date:
-    def __init__(self, day: int | str, month: int | str, year: int | str) -> None:
+    def __init__(self, day: int | str, month: int | str, year: int | str, ignoreassert: bool = False) -> None:
         if type(day) == str:
             assert day.isnumeric(), "day must be an string that can be converted to an int or an int"
             self.__day = int(day)
@@ -19,7 +19,10 @@ class Date:
             assert isinstance(year, int), "year must be an string that can be converted to an int or an int"
             self.__year = year
 
-        assert is_valid_date(self.__year, self.__month, self.__day), "date is invalid (1<=month<=12 or 1<=day<=last_day_of_month)"
+        if not ignoreassert:
+            assert is_valid_date(
+                self.__year, self.__month, self.__day
+            ), f"date is invalid (1<=month<=12 or 1<=day<=last_day_of_month), given {self.__day},{self.__month},{self.__year}"
         pass
 
     def get_str(self, separator: str = "/"):

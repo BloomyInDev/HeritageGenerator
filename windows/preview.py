@@ -22,6 +22,7 @@ class PreviewWindow:
         self.w.geometry(f"{self.image.width}x{self.image.height}")
         self.w.title(title_formater("Tree preview"))
         self.w.bind("<Escape>", lambda event: self.w.destroy())
+        self.w.focus()
 
         # Setup the Menu
         self.menu = tk.Menu(self.w, tearoff=False)

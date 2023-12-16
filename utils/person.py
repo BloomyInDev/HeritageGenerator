@@ -42,7 +42,7 @@ class Person:
             self.birth_location = None
 
         if isinstance(death_date, Date):
-            self.death_date = birth_date
+            self.death_date = death_date
         else:
             self.death_date = None
         if isinstance(death_location, str):
