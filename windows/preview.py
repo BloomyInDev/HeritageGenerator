@@ -3,10 +3,11 @@ import tkinter.ttk as ttk
 import os
 from PIL import Image, ImageTk
 from components.common import title_formater
+from utils.ui_template import UiTemplate
 
 
 class PreviewWindow:
-    def __init__(self, root_element: tk.Tk, img_path: str) -> None:
+    def __init__(self, root_element: tk.Tk, ui: UiTemplate, img_path: str) -> None:
         assert os.path.isfile(img_path)
 
         # Create a new window
@@ -14,13 +15,13 @@ class PreviewWindow:
 
         # Load the image and process it
         self.image = Image.open(img_path)
-        max_res = (1152, 648)
+        max_res = ui.cfg.get(["preview", "window_size"])
         self.image.thumbnail(max_res, Image.Resampling.LANCZOS)
 
         # Settings for the new window
         self.w.resizable(False, False)
         self.w.geometry(f"{self.image.width}x{self.image.height}")
-        self.w.title(title_formater("Tree preview"))
+        self.w.title(title_formater(ui.lang.get(["preview", "title"])))
         self.w.bind("<Escape>", lambda event: self.w.destroy())
         self.w.focus()
 

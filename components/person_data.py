@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.messagebox as msgbox
-from typing import Callable
+from typing import Callable, Literal
 from utils.person import Person
 from utils.date import Date
 from components.common import LabelAndEntry, LabelAndButton, Button, DateEntry, Entry, title_formater
@@ -98,7 +98,7 @@ class PersonDataCreator:
 
 
 class PersonDataEditor:
-    def __init__(self, root: tk.BaseWidget, person: Person, return_zone: Callable[[Person], None]) -> None:
+    def __init__(self, root: tk.BaseWidget, person: Person, return_zone: Callable[[Literal["update", "delete"], Person], None]) -> None:
         self.person = person
         self.__return_zone = return_zone
         self.w = ttk.Labelframe(root, text=str(self.person))
@@ -138,9 +138,20 @@ class PersonDataEditor:
             self.label[i].grid(row=i, column=0, sticky=tk.E)
         for i in range(len(self.info)):
             self.info[i].w.grid(row=i, column=1, sticky=tk.NSEW)
-        self.btn = ttk.Button(self.w, text="Save", command=self.return_updated_person)
-        self.btn.grid(row=len(self.info), column=0, columnspan=2, sticky=tk.EW)
+        self.btn_frame = ttk.Frame(self.w)
+        self.save_btn = ttk.Button(self.btn_frame, text="Save", command=self.return_updated_person)
+        self.save_btn.grid(row=0, column=0, sticky=tk.NSEW)
+        self.del_btn = ttk.Button(self.btn_frame, text="Delete this person", command=self.return_deleted_person)
+        self.del_btn.grid(row=0, column=1, sticky=tk.NSEW)
+        self.btn_frame.grid(row=len(self.info), column=0, columnspan=2, sticky=tk.NSEW)
+
         pass
+
+    def return_deleted_person(self):
+        if msgbox.askokcancel(title=title_formater("Are you sure ?"), message=f"Are you sure to delete {self.person} ?"):  # type: ignore
+            self.__return_zone("delete", self.person)
+        else:
+            pass
 
     def return_updated_person(self):
         assert isinstance(self.info[4], DateEntry) and isinstance(self.info[6], DateEntry)
@@ -164,4 +175,4 @@ class PersonDataEditor:
             self.info[7].get() if self.info[7].get() != "" else None,
             self.info[8].get() if self.info[8].get() != "" else None,
         )
-        self.__return_zone(person)
+        self.__return_zone("update", person)

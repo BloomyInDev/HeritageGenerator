@@ -1,7 +1,7 @@
 import tkinter as tk
 from typing import Callable
 from utils.person import Person
-from components.select_person import SelectPerson
+from components.selector import SelectPerson
 from components.person_data import PersonDataDisplay
 
 

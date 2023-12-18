@@ -1,7 +1,8 @@
 import tkinter as tk
+from typing import Literal
 from utils.person import Person
 from utils.sql import Sql
-from components.select_person import SelectPerson
+from components.selector import SelectPerson
 from components.person_data import PersonDataEditor, PersonDataCreator
 
 
@@ -33,11 +34,15 @@ class EditPersonWindow:
         self.right_part = PersonDataEditor(self.w, self.person_selected, self.validate)
         self.right_part.w.grid(row=0, column=1, sticky=tk.NSEW)
 
-    def validate(self, person: Person):
-        print(person, person.get_birth_str())
-        self.__sql.edit_person(person)
-        self.__persons = self.__sql.get_all_persons()
-        self.select_person.w.destroy()
+    def validate(self, act: Literal["update", "delete"], person: Person):
+        match act:
+            case "update":
+                self.__sql.edit_person(person)
+                self.__persons = self.__sql.get_all_persons()
+                self.select_person.w.destroy()
+            case "delete":
+                self.__sql.delete_person(person.id)
+
         self.select_person = SelectPerson(self.w, self.__persons)
         self.select_person.w.grid(row=0, column=0)
         # print(str(person))

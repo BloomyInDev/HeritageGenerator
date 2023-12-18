@@ -25,7 +25,61 @@
             "no-person-selected": "You need to specify a Person for this tree type"
         }
     },
+    "preview": {
+        "title": "Tree preview",
+        "close": "Close"
+    },
     "add-person": {
         "title": "Add a person"
+    },
+    "edit-person": {},
+    "families": {
+        "title": "",
+        "terms": {
+            "dad": "Dad",
+            "mom": "Mom",
+            "child": "Child",
+            "granddad": "Granddad",
+            "grandmom": "Grandmom"
+        }
+    },
+    "about": {
+        "title": "About",
+        "desc": "A simple app to make family tree"
+    },
+    "menu": {
+        "file": {
+            "name": "File",
+            "new-file": "New file",
+            "open": "Open",
+            "save": "Save",
+            "close": "Exit"
+        },
+        "actions": {
+            "name": "Actions"
+        },
+        "about": {
+            "name": "About"
+        }
+    },
+    "error": {
+        "title": "Error",
+        "no-file-loaded": "You need to open a file to do that !"
+    },
+    "diag": {
+        "open": {
+            "title": "Open a file"
+        },
+        "save": {
+            "title": "Save a file"
+        },
+        "close": {
+            "title": "Save before close",
+            "msg": "Do you want to save before exiting the app ?"
+        }
+    },
+    "files": {
+        "hgb-files": "HeritageGenerator files",
+        "all-files": "All files"
     }
 }

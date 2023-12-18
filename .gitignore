@@ -163,3 +163,4 @@ cython_debug/
 data.db
 temp/
 config.json
+test.hgb

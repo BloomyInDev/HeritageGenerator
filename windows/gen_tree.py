@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.messagebox import showerror  # type: ignore
 from utils.tree import TreeGen
+from utils.ui_template import UiTemplate
 from components.common import big_btn_formater, title_formater
 from windows.preview import PreviewWindow
 from windows.select_person import SelectPersonWindow
@@ -11,9 +12,11 @@ export_format = {"preview": "Show a preview", "pdf": "Export as a PDF", "png": "
 
 
 class GenTreeWindow:
-    def __init__(self, root: tk.Tk, tree: TreeGen) -> None:
+    def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
         self.__root = root
-        self.tree = tree
+        assert isinstance(ui.tree, TreeGen)
+        self.tree = ui.tree
+        self.__ui = ui
         self.w = tk.Toplevel(root)
         self.w.resizable(False, False)
         self.w.title(title_formater("Generate Tree"))
@@ -59,6 +62,7 @@ class GenTreeWindow:
         self.person_choosen = person_id
 
     def generate_and_display_tree(self):
+        assert isinstance(self.tree, TreeGen)
         person_id = None
         if self.person_choosen == None and self.selected_item_tree_menu.get() != "full":
             showerror(title_formater("Error"), "You need to specify a Person for this tree type")
@@ -70,6 +74,6 @@ class GenTreeWindow:
         if self.selected_item_format_menu.get() == "preview":
             print("In preview mode")
             file_path = self.tree.gen_tree(self.selected_item_tree_menu.get(), person_id, "png", False)  # type: ignore
-            PreviewWindow(self.__root, file_path)
+            PreviewWindow(self.__root, self.__ui, file_path)
         else:
             file_path = self.tree.gen_tree(self.selected_item_tree_menu.get(), person_id, self.selected_item_format_menu.get(), True)  # type: ignore

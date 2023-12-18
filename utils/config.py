@@ -2,6 +2,9 @@ import json, os
 
 default_cfg = {
     "lang": "en",
+    "preview": {
+        "window_size": (1166, 648),
+    },
 }
 
 
@@ -18,13 +21,15 @@ class Config:
     def save(self):
         with open("./config.json", "w") as f:
             json.dump(self.cfg, f, indent=4)
-    
-    def get(self,path:list[str]):
+
+    def get(self, path: list[str]):
         p = path
         result = self.cfg
         while len(p) != 0:
             result = result[p[0]]
             p.pop(0)
+        return result
+
 
 class Language:
     def __init__(self, lang: str) -> None:
@@ -37,11 +42,14 @@ class Language:
         for lang in self.lang_name_list:
             with open(f"./languages/{lang}.json") as f:
                 self.lang_list[lang] = json.load(f)  # type: ignore
-        print(self.lang_name_list)
         pass
 
-    def get(self, item: list[str]):
+    def get(self, item: list[str]) -> str:
         item_lst = item
-        thing = self.lang_list[self.lang_selected]  # type: ignore
+        result = self.lang_list[self.lang_selected]  # type: ignore
         for item in item_lst:  # type: ignore
-            thing = thing[item]  # type: ignore
+            try:
+                result = result[item]  # type: ignore
+            except KeyError:
+                return ""
+        return result  # type: ignore
