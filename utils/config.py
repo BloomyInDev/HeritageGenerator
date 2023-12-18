@@ -10,6 +10,10 @@ default_cfg = {
 
 class Config:
     def __init__(self) -> None:
+        if not os.path.exists("./config.json"):
+            with open("./config.json", "w") as f:
+                f.write("{}")
+                f.close
         with open("./config.json", "r") as f:
             self.cfg = json.load(f)
 

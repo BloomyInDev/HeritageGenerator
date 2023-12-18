@@ -84,7 +84,7 @@ class SelectFamily:
             elif list(family_columns.keys())[i] != "childs":
                 self.tree.column(list(family_columns.keys())[i], width=100)
             else:
-                self.tree.column(list(family_columns.keys())[i])
+                self.tree.column(list(family_columns.keys())[i], width=280)
 
     def __format_childs(self, childs: list[Person]):
         if len(childs) == 0:

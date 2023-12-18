@@ -9,14 +9,14 @@ def OpenFile(ui: UiTemplate, file_loader: FileLoader):
     return file_loader.load(
         fdiag.askopenfilename(
             title=title_formater(ui.lang.get(["diag", "open", "title"])),
-            initialdir="/",
+            initialdir="./",
             filetypes=((ui.lang.get(["files", "hgb-files"]), "*.hgb"), (ui.lang.get(["files", "all-files"]), "*.*")),
         )
     )
 
 
 def SaveFile(ui: UiTemplate, file_loader: FileLoader):
-    filepath = fdiag.asksaveasfilename(title=title_formater(ui.lang.get(["diag", "save", "title"])), initialdir="/", filetypes=((ui.lang.get(["files", "hgb-files"]), "*.hgb"),))
+    filepath = fdiag.asksaveasfilename(title=title_formater(ui.lang.get(["diag", "save", "title"])), initialdir="./", filetypes=((ui.lang.get(["files", "hgb-files"]), "*.hgb"),))
     if filepath != "":
         return file_loader.save(
             ui.sql,

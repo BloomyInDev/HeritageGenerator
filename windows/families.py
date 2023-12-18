@@ -14,7 +14,7 @@ coords_for_persons: dict[Literal["mom", "dad", "childs", "granddad", "grandmom"]
 
 class FamiliesWindow:
     def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
-        self.w = tk.Toplevel(root)
+        self.w = tk.Toplevel(root, width=500)
         self.__ui = ui
         self.selectfamily = SelectFamily(self.w, ui.sql.get_all_families())
         self.selectfamily.w.grid(row=0, column=0, sticky=tk.NSEW, padx=2)
@@ -33,7 +33,7 @@ class FamiliesWindow:
     def make_graph(self, family_id: int):
         self.frame = ttk.Labelframe(self.w, text="Family")
         self.frame.grid(row=1, column=0, padx=2, sticky=tk.NSEW)
-        self.canvas = tk.Canvas(self.frame)
+        self.canvas = tk.Canvas(self.frame, width=500)
         family = self.__ui.sql.get_all_families()[family_id]
         self.family: dict[Literal["mom", "dad", "childs", "granddad", "grandmom"], FamilyPart | ChildPart] = {
             "dad": FamilyPart(self.w, self.__ui, "dad", family.dad, self.random),
