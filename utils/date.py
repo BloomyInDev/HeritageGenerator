@@ -61,3 +61,13 @@ def parse_date(date: str | None) -> Date | None:
         if len(splitted_date) == 3:
             return Date(splitted_date[0], splitted_date[1], splitted_date[2])
     return None
+
+
+def compare_dates(date1: Date, date2: Date):
+    if date1.get_day() != date2.get_day():
+        return False
+    if date1.get_month() != date2.get_month():
+        return False
+    if date1.get_year() != date2.get_year():
+        return False
+    return True

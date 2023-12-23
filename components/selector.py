@@ -82,9 +82,9 @@ class SelectFamily:
             if list(family_columns.keys())[i] == "id":
                 self.tree.column(list(family_columns.keys())[i], width=20)
             elif list(family_columns.keys())[i] != "childs":
-                self.tree.column(list(family_columns.keys())[i], width=100)
+                self.tree.column(list(family_columns.keys())[i], width=120)
             else:
-                self.tree.column(list(family_columns.keys())[i], width=280)
+                self.tree.column(list(family_columns.keys())[i], width=240)
 
     def __format_childs(self, childs: list[Person]):
         if len(childs) == 0:

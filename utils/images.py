@@ -96,7 +96,10 @@ class FamilyCard:
         width_needed.sort()
         self.__img = Image.new(
             "RGBA",
-            (width_needed[1] + 64 if width_needed[1] <= 64 else width_needed[1], 68 + (106 if (self.__family.get_wedding_str() != "") or (self.__family.get_divorce_str() != "") else 0)),
+            (
+                width_needed[1] + 64 if width_needed[1] <= 64 else width_needed[1],
+                68 + (106 if (self.__family.get_wedding_str() != "") or (self.__family.get_divorce_str() != "") else 0),
+            ),
             (255, 255, 255, 0),
         )
         self.__img.paste(img, ((self.__img.width // 2) - (img.width // 2), 0))

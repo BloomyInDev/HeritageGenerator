@@ -34,13 +34,11 @@
     },
     "edit-person": {},
     "families": {
-        "title": "",
+        "title": "Families",
         "terms": {
             "dad": "Dad",
             "mom": "Mom",
-            "child": "Child",
-            "granddad": "Granddad",
-            "grandmom": "Grandmom"
+            "child": "Child"
         }
     },
     "about": {
@@ -64,7 +62,8 @@
     },
     "error": {
         "title": "Error",
-        "no-file-loaded": "You need to open a file to do that !"
+        "no-file-loaded": "You need to open a file to do that !",
+        "no-person-selected": "You need to select a Person to do that !"
     },
     "diag": {
         "open": {

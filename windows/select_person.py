@@ -6,10 +6,12 @@ from components.person_data import PersonDataDisplay
 
 
 class SelectPersonWindow:
-    def __init__(self, root: tk.Tk, list_person: dict[int, Person], return_zone: Callable[[int], None]) -> None:
+    def __init__(self, root: tk.Tk, list_person: dict[int, Person], return_zone: Callable[[int], None], with_none: bool = False) -> None:
         self.w = tk.Toplevel(root)
         self.__return_zone = return_zone
         self.__persons = list_person
+        if with_none:
+            self.__persons = {-1: Person(-1, "", "None")} | list_person
         self.person_selected: Person
         self.select_person = SelectPerson(self.w, list_person)
         self.select_person.w.grid(row=0, column=0)

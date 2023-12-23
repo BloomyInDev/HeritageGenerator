@@ -261,6 +261,30 @@ class Sql:
             ),
         )
 
+    def edit_family(self, family: Family):
+        assert isinstance(family, Family)
+        assert family.id in self.get_all_families().keys()
+        self.__sql_conn.cursor().execute(
+            f"UPDATE Family SET Dad=?, Mom=?, Childs=?, WeddingDate=?, WeddingLocation=?, DivorceDate=?, DivorceLocation=?, Notes=? WHERE Id={family.id}",
+            (
+                family.dad.id,
+                family.mom.id,
+                family.get_childs_id_str(),
+                family.get_wedding_date(),
+                family.wedding_location,
+                family.get_divorce_date(),
+                family.divorce_location,
+                family.notes,
+            ),
+        )
+        self.__sql_conn.commit()
+
+    def delete_family(self, id: int):
+        assert isinstance(id, int)
+        assert id in self.get_all_families().keys()
+        self.__sql_conn.cursor().execute("DELETE FROM Family WHERE Id=?", (id,))
+        self.__sql_conn.commit()
+
     def close(self):
         self.__sql_conn.commit()
         self.__sql_conn.close()

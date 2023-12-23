@@ -7,7 +7,7 @@ graphviz_supported_format = Literal["png", "pdf", "svg"]
 
 
 class TreeGen:
-    def __init__(self, persons: dict[int, Person], families: dict[int, Family]) -> None:
+    def __init__(self, ui, persons: dict[int, Person], families: dict[int, Family]) -> None:
         """Class TreeGen
         It also run initializes all the persons
 

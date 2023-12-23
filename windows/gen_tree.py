@@ -7,9 +7,6 @@ from components.common import big_btn_formater, title_formater
 from windows.preview import PreviewWindow
 from windows.select_person import SelectPersonWindow
 
-types_of_trees = {"full": "All persons", "ancestors": "Ancestors of a person", "descendants": "Descendants of a person"}
-export_format = {"preview": "Show a preview", "pdf": "Export as a PDF", "png": "Export as a PNG (Image)", "svg": "Export as a SVG"}
-
 
 class GenTreeWindow:
     def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
@@ -17,6 +14,8 @@ class GenTreeWindow:
         assert isinstance(ui.tree, TreeGen)
         self.tree = ui.tree
         self.__ui = ui
+        types_of_trees = ui.lang.get(["gen-tree", "types"])
+        export_format = ui.lang.get(["gen-tree", "format"])
         self.w = tk.Toplevel(root)
         self.w.resizable(False, False)
         self.w.title(title_formater("Generate Tree"))
@@ -30,7 +29,7 @@ class GenTreeWindow:
         self.selected_item_tree_menu.set("full")
         self.selected_item_tree_menu.trace("w", self.update_selected_tree_menu)  # type: ignore
         for i in range(len(types_of_trees)):
-            self.tree_menu.add_radiobutton(label=types_of_trees[list(types_of_trees.keys())[i]], value=list(types_of_trees.keys())[i], variable=self.selected_item_tree_menu)
+            self.tree_menu.add_radiobutton(label=types_of_trees[list(types_of_trees.keys())[i]], value=list(types_of_trees.keys())[i], variable=self.selected_item_tree_menu)  # type: ignore
         self.tree_menu_btn["menu"] = self.tree_menu
         self.tree_menu_btn.grid(row=0, column=0)
 
@@ -40,7 +39,7 @@ class GenTreeWindow:
         self.selected_item_format_menu.set("preview")
         self.selected_item_format_menu.trace("w", self.update_selected_tree_menu)  # type: ignore
         for i in range(len(types_of_trees)):
-            self.format_menu.add_radiobutton(label=export_format[list(export_format.keys())[i]], value=list(export_format.keys())[i], variable=self.selected_item_format_menu)
+            self.format_menu.add_radiobutton(label=export_format[list(export_format.keys())[i]], value=list(export_format.keys())[i], variable=self.selected_item_format_menu)  # type: ignore
         self.format_menu_btn["menu"] = self.format_menu
         self.format_menu_btn.grid(row=1, column=0, columnspan=2, sticky=tk.EW)
         self.person_choosen: int | None = None

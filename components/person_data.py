@@ -3,8 +3,8 @@ import tkinter.ttk as ttk
 import tkinter.messagebox as msgbox
 from typing import Callable, Literal
 from utils.person import Person
-from utils.date import Date
-from components.common import LabelAndEntry, LabelAndButton, Button, DateEntry, Entry, title_formater
+from utils.date import Date, compare_dates
+from components.common import LabelAndEntry, LabelAndButton, Button, DateEntry, Entry, big_btn_formater, title_formater
 
 
 class PersonDataDisplay:
@@ -38,6 +38,7 @@ class PersonDataDisplay:
 class PersonDataCreator:
     def __init__(self, root: tk.BaseWidget, id_person: int, return_zone: Callable[[Person], None]) -> None:
         self.__return_zone = return_zone
+        self.__root = root
         self.w = ttk.Labelframe(root, text="Add a person")
         self.label = [
             ttk.Label(self.w, text="Id"),
@@ -51,7 +52,7 @@ class PersonDataCreator:
             ttk.Label(self.w, text="Job"),
         ]
         self.info: list[Entry | DateEntry] = [
-            Entry(self.w, str(id_person), readonly=True),
+            Entry(self.w, default_value=str(id_person), readonly=True),
             Entry(self.w),
             Entry(self.w),
             Entry(self.w),
@@ -65,9 +66,11 @@ class PersonDataCreator:
             self.label[i].grid(row=i, column=0, sticky=tk.E)
         for i in range(len(self.info)):
             self.info[i].w.grid(row=i, column=1, sticky=tk.NSEW)
+        self.btn = ttk.Button(self.w, text=big_btn_formater("Add this person"), command=self.return_new_person)
+        self.btn.grid(row=len(self.info), column=0, columnspan=2, sticky=tk.NSEW)
         pass
 
-    def return_updated_person(self):
+    def return_new_person(self):
         # id = self.info[0].get()
         # first_name = self.info[1].get()
         # new_person = Person(,self.info[2].get(),self.info[1].get())
@@ -84,17 +87,19 @@ class PersonDataCreator:
 
         new_person = Person(
             int(self.info[0].get()),
-            self.info[1].get(),
             self.info[2].get(),
+            self.info[1].get(),
             self.info[3].get() if self.info[3].get() != "" else None,
-            self.info[4].get() if self.info[4].get() != Date(0, 0, 0) else None,
+            self.info[4].get() if compare_dates(self.info[4].get(), Date(0, 0, 0, ignoreassert=True)) == False else None,
             self.info[5].get() if self.info[5].get() != "" else None,
-            self.info[6].get() if self.info[6].get() != Date(0, 0, 0) else None,
+            self.info[6].get() if compare_dates(self.info[6].get(), Date(0, 0, 0, ignoreassert=True)) == False else None,
             self.info[7].get() if self.info[7].get() != "" else None,
             self.info[8].get() if self.info[8].get() != "" else None,
         )
 
         self.__return_zone(new_person)
+        msgbox.showinfo(title_formater("Info"), message="Person added sucessfully !")  # type: ignore
+        self.__root.destroy()
 
 
 class PersonDataEditor:

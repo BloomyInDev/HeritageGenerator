@@ -200,6 +200,12 @@ class Family:
             final_str += self.divorce_location
         return final_str
 
+    def get_childs_id_str(self):
+        final_str = ""
+        for child in self.childs:
+            final_str += f"{child.id},"
+        return final_str[:-1]
+
 
 ## Example for Family class
 

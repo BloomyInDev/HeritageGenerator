@@ -10,6 +10,7 @@ class AddPersonWindow:
     def __init__(self, root: tk.Tk, sql: Sql) -> None:
         self.w = tk.Toplevel(root)
         self.addzone = PersonDataCreator(self.w, max(sql.get_all_persons().keys()) + 1, sql.create_new_person)
+        self.addzone.w.grid()
 
 
 class EditPersonWindow:

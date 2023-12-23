@@ -40,7 +40,7 @@ class Ui(UiTemplate):
 
     def refresh_data(self):
         if not isinstance(self.tree, TreeGen):
-            self.tree = TreeGen(self.sql.get_all_persons(), self.sql.get_all_families())
+            self.tree = TreeGen(self, self.sql.get_all_persons(), self.sql.get_all_families())
         else:
             self.tree.update_persons(self.sql.get_all_persons(), self.sql.get_all_families())
         print(f"Loaded {len(self.tree.get_persons())} persons and {len(self.tree.get_families())} families")
