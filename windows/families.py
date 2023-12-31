@@ -6,6 +6,7 @@ from utils.person import Person
 from utils.ui_template import UiTemplate
 from components.selector import SelectFamily
 from components.family_part import ChildPart, FamilyPart
+from windows.select_person import SelectPersonWindow
 from PIL import Image, ImageTk
 
 coords_for_persons: dict[Literal["mom", "dad", "childs"], tuple[float, float]] = {
@@ -25,7 +26,7 @@ class FamiliesWindow:
         self.w.config(menu=self.menu)
         self.menu.add_command(label="Create a new family")
         self.menu.add_command(label="Update", command=self.update)
-        self.selectfamily: SelectFamily = SelectFamily(self.w, ui.sql.get_all_families())
+        self.selectfamily: SelectFamily = SelectFamily(self.w, ui.lang, ui.sql.get_all_families())
         self.selectfamily.w.grid(row=0, column=0, sticky=tk.NSEW, padx=2)
         self.selectfamily.selected_family_id.watch_changes(self.on_change)
         self.frame: ttk.Labelframe | None = None
@@ -110,7 +111,7 @@ class FamiliesWindow:
 
     def update(self):
         self.selectfamily.w.destroy()
-        self.selectfamily = SelectFamily(self.w, self.__ui.sql.get_all_families())
+        self.selectfamily = SelectFamily(self.w, self.__ui.lang, self.__ui.sql.get_all_families())
         self.selectfamily.w.grid(row=0, column=0, sticky=tk.NSEW, padx=2)
         self.selectfamily.selected_family_id.watch_changes(self.on_change)
         if self.frame != None:
@@ -119,5 +120,12 @@ class FamiliesWindow:
 
 
 class CreateFamilyWindow:
-    def __init__(self) -> None:
+    def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
+        self.w = tk.Toplevel(root)
+        self.box = ttk.Labelframe(self.w)
+        self.label = [
+            ttk.Label(self.box, text="Dad"),
+            ttk.Label(self.box, text="Mom"),
+            ttk.Label(self.box, text="Childs"),
+        ]
         pass

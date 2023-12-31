@@ -13,6 +13,7 @@ class GenTreeWindow:
         self.__root = root
         assert isinstance(ui.tree, TreeGen)
         self.tree = ui.tree
+        self.tree.update_persons(ui.sql.get_all_persons(), ui.sql.get_all_families())
         self.__ui = ui
         types_of_trees = ui.lang.get(["gen-tree", "types"])
         export_format = ui.lang.get(["gen-tree", "format"])
@@ -43,7 +44,7 @@ class GenTreeWindow:
         self.format_menu_btn["menu"] = self.format_menu
         self.format_menu_btn.grid(row=1, column=0, columnspan=2, sticky=tk.EW)
         self.person_choosen: int | None = None
-        self.choose_person = ttk.Button(self.frame, text="Select a person", command=lambda: SelectPersonWindow(root, self.tree.get_persons(), self.update_selected_person))
+        self.choose_person = ttk.Button(self.frame, text="Select a person", command=lambda: SelectPersonWindow(root, ui.lang, self.tree.get_persons(), self.update_selected_person))
         self.choose_person.grid(row=0, column=1)
         self.btn = ttk.Button(self.frame, text=big_btn_formater("Generate !"), command=self.generate_and_display_tree)
         self.btn.grid(row=2, column=0, columnspan=2, sticky=tk.EW)

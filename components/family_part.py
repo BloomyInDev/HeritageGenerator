@@ -42,7 +42,7 @@ class ChildPart:
         pass
 
     def add_btn_click(self):
-        self.select_person = SelectPersonWindow(self.__ui.w, self.__ui.sql.get_all_persons(), self.add_btn_return)
+        self.select_person = SelectPersonWindow(self.__ui.w, self.__ui.lang, self.__ui.sql.get_all_persons(), self.add_btn_return)
         pass
 
     def add_btn_return(self, person_id: int):

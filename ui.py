@@ -125,13 +125,13 @@ class Bootstraper:
 
     def create_person(self, file_loader: FileLoader, ui: Ui):
         if file_loader.file_loaded:
-            AddPersonWindow(ui.w, ui.sql)
+            AddPersonWindow(ui.w, ui)
         else:
             showerror(title_formater(ui.lang.get(["error", "title"])), ui.lang.get(["error", "no-file-loaded"]))
 
     def edit_person(self, file_loader: FileLoader, ui: Ui):
         if file_loader.file_loaded:
-            EditPersonWindow(ui.w, ui.sql)
+            EditPersonWindow(ui.w, ui)
         else:
             showerror(title_formater(ui.lang.get(["error", "title"])), ui.lang.get(["error", "no-file-loaded"]))
 

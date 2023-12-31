@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from utils.config import Language
 from utils.person import Person, Family
 from utils.watcher import Watcher
 
@@ -23,7 +24,7 @@ family_columns = {
 
 
 class SelectPerson:
-    def __init__(self, root: tk.BaseWidget, list_person: dict[int, Person]) -> None:
+    def __init__(self, root: tk.BaseWidget, lang: Language, list_person: dict[int, Person]) -> None:
         self.__persons = list_person
         self.w = ttk.Labelframe(root, text="Choose a person")
         self.selected_person_id = Watcher(-1)
@@ -65,7 +66,7 @@ class SelectPerson:
 
 
 class SelectFamily:
-    def __init__(self, root: tk.BaseWidget, list_family: dict[int, Family]) -> None:
+    def __init__(self, root: tk.BaseWidget, lang: Language, list_family: dict[int, Family]) -> None:
         self.__families = list_family
         self.w = ttk.Labelframe(root, text="Choose a family")
         self.selected_family_id = Watcher(-1)
