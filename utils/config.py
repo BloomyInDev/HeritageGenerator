@@ -41,10 +41,10 @@ class Language:
 
         for i in range(len(self.lang_name_list)):
             self.lang_name_list[i] = self.lang_name_list[i].split(".")[0]  # type: ignore
-        self.lang_selected = "en" if "en" in self.lang_name_list else self.lang_name_list[0]
+        self.lang_selected = lang if lang in self.lang_name_list else self.lang_name_list[0]
         self.lang_list = {}
         for lang in self.lang_name_list:
-            with open(f"./languages/{lang}.json") as f:
+            with open(f"./languages/{lang}.json", encoding="utf8") as f:
                 self.lang_list[lang] = json.load(f)  # type: ignore
         pass
 

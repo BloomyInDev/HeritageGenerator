@@ -1,0 +1,84 @@
+{
+    "home": {
+        "add-person": "Ajouter une personne",
+        "edit-person": "Editer une personne",
+        "gen-tree": "Générer l'arbre"
+    },
+    "gen-tree": {
+        "title": "Générer l'arbre",
+        "type-btn": "Type d'arbre",
+        "types": {
+            "full": "Toutes les personnes",
+            "ancestors": "Ancêtres d'une personne",
+            "descendants": "Descendants d'une personne"
+        },
+        "format-btn": "Format d'export",
+        "format": {
+            "preview": "Afficher une prévisualisation",
+            "pdf": "Export en PDF",
+            "png": "Export en PNG (Image)",
+            "svg": "Export en SVG"
+        },
+        "select-person-btn": "Selectionner une personne",
+        "generate-btn": "Générer l'arbre !",
+        "error": {
+            "no-person-selected": "Vous devez choisir une personne pour ce type d'arbre"
+        }
+    },
+    "preview": {
+        "title": "Prévisualisation de l'arbre",
+        "close": "Fermer"
+    },
+    "add-person": {
+        "title": "Ajouter une personne"
+    },
+    "edit-person": {},
+    "families": {
+        "title": "Familles",
+        "terms": {
+            "dad": "Père",
+            "mom": "Mère",
+            "child": "Enfants"
+        }
+    },
+    "about": {
+        "title": "A propos",
+        "desc": "Un petite application pour créer des arbres généalogiques"
+    },
+    "menu": {
+        "file": {
+            "name": "Fichiers",
+            "new-file": "Nouveau",
+            "open": "Ouvrir",
+            "save": "Enregistrer",
+            "close": "Fermer"
+        },
+        "actions": {
+            "name": "Actions"
+        },
+        "about": {
+            "name": "A propos"
+        }
+    },
+    "error": {
+        "title": "Erreur",
+        "no-file-loaded": "Vous devez ouvrir un fichier pour faire sa",
+        "no-person-selected": "Vous devez choisir une personne pour faire sa"
+    },
+    "diag": {
+        "open": {
+            "title": "Ouvrir un fichier"
+        },
+        "save": {
+            "title": "Enregistrer un fichier"
+        },
+        "close": {
+            "title": "Sauvegarder avant fermeture",
+            "msg": "Voulez vous sauvegarder avant de fermer l'application ?"
+        }
+    },
+    "files": {
+        "hgb-files": "Fichiers HeritageGenerator",
+        "all-files": "Tout les fichiers"
+    }
+}

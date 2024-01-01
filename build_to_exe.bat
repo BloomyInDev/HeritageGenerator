@@ -16,5 +16,6 @@ pyinstaller --noconfirm ^
 
 echo Copying assets
 robocopy ./assets ./dist/assets > nul
+robocopy ./languages ./dist/languages > nul
 
 echo Done !
