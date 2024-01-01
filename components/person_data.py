@@ -171,8 +171,8 @@ class PersonDataEditor:
 
         person = Person(
             int(self.info[0].get()),
-            self.info[1].get(),
             self.info[2].get(),
+            self.info[1].get(),
             self.info[3].get() if self.info[3].get() != "" else None,
             self.info[4].get() if self.info[4].get() != Date(0, 0, 0, ignoreassert=True) else None,
             self.info[5].get() if self.info[5].get() != "" else None,

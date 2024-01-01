@@ -204,6 +204,10 @@ class Sql:
     def edit_person(self, person: Person):
         assert isinstance(person, Person)
         assert person.id in self.get_all_persons().keys()
+        if person.get_birth_date() == "00/00/0":
+            person.birth_date = None
+        if person.get_death_date() == "00/00/0":
+            person.death_date = None
         self.__sql_conn.cursor().execute(
             f"UPDATE Person SET Name=?, FirstName=?, OldName=?, BirthDate=?, BirthLocation=?, DeathDate=?, DeathLocation=?, Job=?, Notes=?, AdditionalFiles=? WHERE Id={person.id}",
             (
@@ -235,7 +239,8 @@ class Sql:
             for i in family_list.keys():
                 if i > new_id:
                     new_id = i
-            family.id = new_id
+            print(f"New id: {family.id} to {new_id}")
+            family.id = new_id + 1
         format_childs = ""
         for child in family.childs:
             if len(format_childs) != 0:
@@ -244,20 +249,19 @@ class Sql:
                 format_childs += f"{child.id}"
         self.__sql_conn.cursor().execute(
             """
-            INSERT INTO Family(Id,Dad,Mom,Childs,WeddingDate,WeddingLocation,DivorceDate,DivorceLocatio,Notes)
+            INSERT INTO Family(Id,Dad,Mom,Childs,WeddingDate,WeddingLocation,DivorceDate,DivorceLocation,Notes)
             VALUES (?,?,?,?,?,?,?,?,?)
             """,
             (
                 family.id,
-                family.dad,
-                family.mom,
+                family.dad.id,
+                family.mom.id,
                 format_childs,
                 family.get_wedding_date(),
                 family.wedding_location,
                 family.get_divorce_date(),
                 family.divorce_location,
                 family.notes,
-                None,
             ),
         )
 

@@ -29,10 +29,13 @@ class SelectPerson:
         self.w = ttk.Labelframe(root, text="Choose a person")
         self.selected_person_id = Watcher(-1)
         self.tree = ttk.Treeview(self.w, columns=list(person_columns.keys()), show="headings")
+        self.scrollbar = ttk.Scrollbar(self.w, orient="vertical", command=self.tree.yview)  # type: ignore
+        self.tree["yscrollcommand"] = self.scrollbar.set
         self.__set_headings()
         self.__append_all_persons()
         self.tree.bind("<<TreeviewSelect>>", self.__person_selected)  # type: ignore
         self.tree.grid(row=0, column=0)
+        self.scrollbar.grid(row=0, column=1, sticky=tk.NS)
         pass
 
     def __set_headings(self):

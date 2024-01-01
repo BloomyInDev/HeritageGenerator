@@ -1,8 +1,8 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from typing import Literal
-from components.common import title_formater
-from utils.person import Person
+from components.common import Button, title_formater, big_btn_formater
+from utils.person import Family, Person
 from utils.ui_template import UiTemplate
 from components.selector import SelectFamily
 from components.family_part import ChildPart, FamilyPart
@@ -24,7 +24,7 @@ class FamiliesWindow:
         self.w.title(title_formater("Families"))
         self.menu = tk.Menu(self.w)
         self.w.config(menu=self.menu)
-        self.menu.add_command(label="Create a new family")
+        self.menu.add_command(label="Create a new family", command=lambda: CreateFamilyWindow(root, ui))
         self.menu.add_command(label="Update", command=self.update)
         self.selectfamily: SelectFamily = SelectFamily(self.w, ui.lang, ui.sql.get_all_families())
         self.selectfamily.w.grid(row=0, column=0, sticky=tk.NSEW, padx=2)
@@ -89,12 +89,16 @@ class FamiliesWindow:
         self.canvas.grid()
 
     def act_dad(self, person_id: int):
-        print("bonjour")
+        family = self.__ui.sql.get_all_families()[self.selectfamily.selected_family_id.get()]  # type: ignore
+        family.dad = self.__ui.sql.get_all_persons()[person_id]
+        self.__ui.sql.edit_family(family)
         self.update()
         pass
 
     def act_mom(self, person_id: int):
-        print("bonjour")
+        family = self.__ui.sql.get_all_families()[self.selectfamily.selected_family_id.get()]  # type: ignore
+        family.mom = self.__ui.sql.get_all_persons()[person_id]
+        self.__ui.sql.edit_family(family)
         self.update()
         pass
 
@@ -123,9 +127,64 @@ class CreateFamilyWindow:
     def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
         self.w = tk.Toplevel(root)
         self.box = ttk.Labelframe(self.w)
-        self.label = [
-            ttk.Label(self.box, text="Dad"),
-            ttk.Label(self.box, text="Mom"),
-            ttk.Label(self.box, text="Childs"),
-        ]
+        self.box.grid()
+        self.__ui = ui
+        self.data: dict[Literal["dad", "mom", "childs"], int | list[int]] = {"dad": -1, "mom": -1, "childs": []}
+        self.update()
+
         pass
+
+    def store_dad(self, person_id: int):
+        self.data["dad"] = person_id
+        self.update()
+        pass
+
+    def store_mom(self, person_id: int):
+        self.data["mom"] = person_id
+        self.update()
+        pass
+
+    def store_childs(self, person_id: int, act: Literal["add", "remove"]):
+        assert isinstance(self.data["childs"], list)
+        print(f"{act} on {person_id}")
+        if act == "add":
+            self.data["childs"].append(person_id)
+        else:
+            for i in range(len(self.data["childs"])):
+                if self.data["childs"][i] == person_id:
+                    self.data["childs"].pop(i)
+        self.update()
+
+    def update(self):
+        assert isinstance(self.data["dad"], int)
+        assert isinstance(self.data["mom"], int)
+        assert isinstance(self.data["childs"], list)
+        self.info = [
+            FamilyPart(self.box, self.__ui, "dad", None if self.data["dad"] == -1 else self.__ui.sql.get_all_persons()[self.data["dad"]], self.store_dad, "horizontal"),
+            FamilyPart(self.box, self.__ui, "mom", None if self.data["mom"] == -1 else self.__ui.sql.get_all_persons()[self.data["mom"]], self.store_mom, "horizontal"),
+            ChildPart(self.box, self.__ui, convert_person_id_to_person(self.data["childs"], self.__ui.sql.get_all_persons()), self.store_childs, "horizontal"),  # type: ignore
+            Button(self.box, big_btn_formater("Add"), self.create_family),
+        ]
+        for i in range(len(self.info)):
+            self.info[i].w.grid(row=i, column=0, sticky=tk.NSEW)
+
+    def create_family(self):
+        persons = self.__ui.sql.get_all_persons()
+        assert isinstance(self.data["dad"], int)
+        assert isinstance(self.data["mom"], int)
+        assert isinstance(self.data["childs"], list)
+        self.__ui.sql.create_new_family(
+            Family(
+                0,
+                persons[self.data["dad"]],
+                persons[self.data["mom"]],
+                convert_person_id_to_person(self.data["childs"], persons),
+            )
+        )
+
+
+def convert_person_id_to_person(person_id_list: list[int], persons: dict[int, Person]):
+    person_list: list[Person] = []
+    for person_id in person_id_list:
+        person_list.append(persons[person_id])
+    return person_list
