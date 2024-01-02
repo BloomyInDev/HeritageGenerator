@@ -50,6 +50,8 @@
     "families": {
         "title": "Families",
         "family": "Family",
+        "new": "Create a new family",
+        "update": "Update",
         "terms": {
             "dad": "Dad",
             "mom": "Mom",

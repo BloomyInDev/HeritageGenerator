@@ -20,12 +20,11 @@ class FamiliesWindow:
     def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
         self.__ui = ui
         self.w = tk.Toplevel(root, width=500)
-        self.__ui = ui
-        self.w.title(title_formater("Families"))
+        self.w.title(title_formater(self.__ui.lang.get(["families", "title"])))
         self.menu = tk.Menu(self.w)
         self.w.config(menu=self.menu)
-        self.menu.add_command(label="Create a new family", command=lambda: CreateFamilyWindow(root, ui))
-        self.menu.add_command(label="Update", command=self.update)
+        self.menu.add_command(label=self.__ui.lang.get(["families", "new"]), command=lambda: CreateFamilyWindow(root, ui))
+        self.menu.add_command(label=self.__ui.lang.get(["families", "update"]), command=self.update)
         self.selectfamily: SelectFamily = SelectFamily(self.w, ui.lang, ui.sql.get_all_families())
         self.selectfamily.w.grid(row=0, column=0, sticky=tk.NSEW, padx=2)
         self.selectfamily.selected_family_id.watch_changes(self.on_change)
@@ -41,7 +40,7 @@ class FamiliesWindow:
         pass
 
     def make_graph(self, family_id: int):
-        self.frame = ttk.Labelframe(self.w, text="Family")
+        self.frame = ttk.Labelframe(self.w, text=self.__ui.lang.get(["families", "family"]))
         self.frame.grid(row=1, column=0, padx=2, sticky=tk.NSEW)
         self.canvas = tk.Canvas(self.frame, width=500, height=200)
         family = self.__ui.sql.get_all_families()[family_id]
@@ -109,7 +108,7 @@ class FamiliesWindow:
             self.__ui.sql.edit_family(family)
             print("Added someone in the family")
         else:
-            print(f"bonjour, {act}, {person_id}")
+            print(f"{act}, {person_id}")
         self.update()
         pass
 

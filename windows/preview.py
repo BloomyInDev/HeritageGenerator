@@ -28,7 +28,7 @@ class PreviewWindow:
         # Setup the Menu
         self.menu = tk.Menu(self.w, tearoff=False)
         self.w.configure(menu=self.menu)
-        self.menu.add_command(label="Close", command=lambda: self.w.destroy())
+        self.menu.add_command(label=ui.lang.get(["preview", "close"]), command=lambda: self.w.destroy())
 
         # Setup the image displayer
         self.tk_image = ImageTk.PhotoImage(self.image)
