@@ -9,7 +9,7 @@ from utils.ui_template import UiTemplate
 class AddPersonWindow:
     def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
         self.w = tk.Toplevel(root)
-        self.addzone = PersonDataCreator(self.w, max(ui.sql.get_all_persons().keys()) + 1, ui.sql.create_new_person)
+        self.addzone = PersonDataCreator(self.w, ui.lang, max(ui.sql.get_all_persons().keys()) + 1, ui.sql.create_new_person)
         self.addzone.w.grid()
 
 
@@ -33,7 +33,7 @@ class EditPersonWindow:
         if self.right_part != None:
             self.right_part.w.destroy()
         print("Changing person")
-        self.right_part = PersonDataEditor(self.w, self.person_selected, self.validate)
+        self.right_part = PersonDataEditor(self.w, self.__ui.lang, self.person_selected, self.validate)
         self.right_part.w.grid(row=0, column=1, sticky=tk.NSEW)
 
     def validate(self, act: Literal["update", "delete"], person: Person):

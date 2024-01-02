@@ -7,8 +7,6 @@ from windows.select_person import SelectPersonWindow
 from utils.person import Person
 from utils.ui_template import UiTemplate
 
-person_types = {"mom": "Mom", "dad": "Dad", "childs": "Childs"}
-
 
 class FamilyPart:
     def __init__(
@@ -22,7 +20,12 @@ class FamilyPart:
     ) -> None:
         self.w = ttk.Frame(root)
         self.__callback, self.__ui = callback, ui
-        self.btn = ttk.Button(self.w, text=person_types[who], command=self.on_click)  # lambda: callback(person.id if person != None else -1))
+        self.person_types = {
+            "mom": ui.lang.get(["families", "terms", "mom"]),
+            "dad": ui.lang.get(["families", "terms", "dad"]),
+            "childs": ui.lang.get(["families", "terms", "childs"]),
+        }
+        self.btn = ttk.Button(self.w, text=self.person_types[who], command=self.on_click)  # lambda: callback(person.id if person != None else -1))
         self.btn.grid(row=0, column=0, sticky=tk.NSEW)
         self.person = person
         self.text = tk.StringVar(value=str(self.person))
@@ -54,8 +57,13 @@ class ChildPart:
         self.__list_childs = list_childs
         self.__callback = callback
         self.__ui = ui
+        self.person_types = {
+            "mom": ui.lang.get(["families", "terms", "mom"]),
+            "dad": ui.lang.get(["families", "terms", "dad"]),
+            "childs": ui.lang.get(["families", "terms", "childs"]),
+        }
         self.w = ttk.Frame(root)
-        self.btn = ttk.Button(self.w, text=person_types["childs"])
+        self.btn = ttk.Button(self.w, text=self.person_types["childs"])
         self.btn.grid(row=0, column=0, columnspan=1 if direction == "vertical" else 2, sticky=tk.NSEW)
         self.list_var = tk.Variable(value=list_childs)
         self.list = tk.Listbox(self.w, listvariable=self.list_var, selectmode=tk.SINGLE, height=len(list_childs))

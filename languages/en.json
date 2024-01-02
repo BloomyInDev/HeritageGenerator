@@ -30,15 +30,30 @@
         "close": "Close"
     },
     "add-person": {
-        "title": "Add a person"
+        "title": "Add a person",
+        "add": "Add this person"
     },
     "edit-person": {},
+    "person": {
+        "id": "Id",
+        "name": "Name",
+        "first_name": "First name",
+        "old_name": "Old Name",
+        "birth_date": "Birth Date",
+        "birth_location": "Birth location",
+        "death_date": "Death date",
+        "death_location": "Death location",
+        "job": "Job",
+        "notes": "Notes",
+        "select": "Select this"
+    },
     "families": {
         "title": "Families",
+        "family": "Family",
         "terms": {
             "dad": "Dad",
             "mom": "Mom",
-            "child": "Child"
+            "childs": "Childs"
         }
     },
     "about": {

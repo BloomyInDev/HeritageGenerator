@@ -19,12 +19,12 @@ class GenTreeWindow:
         export_format = ui.lang.get(["gen-tree", "format"])
         self.w = tk.Toplevel(root)
         self.w.resizable(False, False)
-        self.w.title(title_formater("Generate Tree"))
+        self.w.title(title_formater(ui.lang.get(["gen-tree", "title"])))
         self.w.bind("<Escape>", lambda event: self.w.destroy())
         self.w.focus()
         self.frame = ttk.Frame(self.w)
         self.frame.grid(row=0, column=0, pady=5, padx=5)
-        self.tree_menu_btn = ttk.Menubutton(self.frame, text="Type of tree")
+        self.tree_menu_btn = ttk.Menubutton(self.frame, text=ui.lang.get(["gen-tree", "type-btn"]))
         self.tree_menu = tk.Menu(self.tree_menu_btn, tearoff=0)
         self.selected_item_tree_menu = tk.StringVar()
         self.selected_item_tree_menu.set("full")
@@ -34,7 +34,7 @@ class GenTreeWindow:
         self.tree_menu_btn["menu"] = self.tree_menu
         self.tree_menu_btn.grid(row=0, column=0)
 
-        self.format_menu_btn = ttk.Menubutton(self.frame, text="Export format")
+        self.format_menu_btn = ttk.Menubutton(self.frame, text=ui.lang.get(["gen-tree", "format-btn"]))
         self.format_menu = tk.Menu(self.format_menu_btn, tearoff=0)
         self.selected_item_format_menu = tk.StringVar()
         self.selected_item_format_menu.set("preview")
@@ -44,9 +44,11 @@ class GenTreeWindow:
         self.format_menu_btn["menu"] = self.format_menu
         self.format_menu_btn.grid(row=1, column=0, columnspan=2, sticky=tk.EW)
         self.person_choosen: int | None = None
-        self.choose_person = ttk.Button(self.frame, text="Select a person", command=lambda: SelectPersonWindow(root, ui.lang, self.tree.get_persons(), self.update_selected_person))
+        self.choose_person = ttk.Button(
+            self.frame, text=ui.lang.get(["gen-tree", "select-person-btn"]), command=lambda: SelectPersonWindow(root, ui.lang, self.tree.get_persons(), self.update_selected_person)
+        )
         self.choose_person.grid(row=0, column=1)
-        self.btn = ttk.Button(self.frame, text=big_btn_formater("Generate !"), command=self.generate_and_display_tree)
+        self.btn = ttk.Button(self.frame, text=big_btn_formater(ui.lang.get(["gen-tree", "generate-btn"])), command=self.generate_and_display_tree)
         self.btn.grid(row=2, column=0, columnspan=2, sticky=tk.EW)
         self.update_selected_tree_menu()  # type: ignore
         pass

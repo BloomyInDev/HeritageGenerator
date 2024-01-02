@@ -14,6 +14,8 @@ from utils.person import Person
 from utils.tree import TreeGen
 from utils.config import Config, Language
 
+DEBUG = True
+
 
 class Ui(UiTemplate):
     def __init__(self) -> None:
@@ -67,6 +69,13 @@ class Ui(UiTemplate):
         act_menu.add_command(label=self.lang.get(["home", "gen-tree"]), command=lambda: Bootstraper().gen_tree(self.file_loader, self))
         self.menu.add_cascade(label=self.lang.get(["menu", "actions", "name"]), menu=act_menu)
         self.menu.add_command(label=self.lang.get(["menu", "about", "name"]), command=lambda: AboutWindow(self.w, self))
+        if DEBUG:
+            self.ui_define_debug_menu()
+
+    def ui_define_debug_menu(self):
+        debug_menu = tk.Menu(self.menu, tearoff=False)
+        debug_menu.add_command(label="Reload Lang", command=self.lang.reload)
+        self.menu.add_cascade(label="Debug", menu=debug_menu)
 
     def ui_define_core_of_the_window(self):
         self.__add_person_btn = ttk.Button(

@@ -2,27 +2,28 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.messagebox as msgbox
 from typing import Callable, Literal
+from utils.config import Language
 from utils.person import Person
 from utils.date import Date, compare_dates
 from components.common import LabelAndEntry, LabelAndButton, Button, DateEntry, Entry, big_btn_formater, title_formater
 
 
 class PersonDataDisplay:
-    def __init__(self, root: tk.BaseWidget, person: Person, return_zone: Callable[[int], None]) -> None:
+    def __init__(self, root: tk.BaseWidget, lang: Language, person: Person, return_zone: Callable[[int], None]) -> None:
         self.person = person
         self.__return_zone = return_zone
         self.w = ttk.Labelframe(root, text=str(self.person))
         self.info: list[LabelAndEntry | LabelAndButton | Button] = [
-            LabelAndEntry(self.w, "Id", str(self.person.id), readonly=True),
-            LabelAndEntry(self.w, "First Name", self.person.first_name, readonly=True),
-            LabelAndEntry(self.w, "Name", self.person.name, readonly=True),
-            LabelAndEntry(self.w, "Old Name", self.person.old_name if self.person.old_name != None else "", readonly=True),
-            LabelAndEntry(self.w, "Birth Date", self.person.birth_date.get_str() if self.person.birth_date != None else "", readonly=True),
-            LabelAndEntry(self.w, "Birth Location", self.person.birth_location if self.person.birth_location != None else "", readonly=True),
-            LabelAndEntry(self.w, "Death Date", self.person.death_date.get_str() if self.person.death_date != None else "", readonly=True),
-            LabelAndEntry(self.w, "Death Location", self.person.death_location if self.person.death_location != None else "", readonly=True),
-            LabelAndEntry(self.w, "Job", self.person.job if self.person.job != None else "", readonly=True),
-            Button(self.w, "Select this", self.return_selected_person),
+            LabelAndEntry(self.w, lang.get(["person", "id"]), str(self.person.id), readonly=True),
+            LabelAndEntry(self.w, lang.get(["person", "first_name"]), self.person.first_name, readonly=True),
+            LabelAndEntry(self.w, lang.get(["person", "name"]), self.person.name, readonly=True),
+            LabelAndEntry(self.w, lang.get(["person", "old_name"]), self.person.old_name if self.person.old_name != None else "", readonly=True),
+            LabelAndEntry(self.w, lang.get(["person", "birth_date"]), self.person.birth_date.get_str() if self.person.birth_date != None else "", readonly=True),
+            LabelAndEntry(self.w, lang.get(["person", "birth_location"]), self.person.birth_location if self.person.birth_location != None else "", readonly=True),
+            LabelAndEntry(self.w, lang.get(["person", "death_date"]), self.person.death_date.get_str() if self.person.death_date != None else "", readonly=True),
+            LabelAndEntry(self.w, lang.get(["person", "death_location"]), self.person.death_location if self.person.death_location != None else "", readonly=True),
+            LabelAndEntry(self.w, lang.get(["person", "job"]), self.person.job if self.person.job != None else "", readonly=True),
+            Button(self.w, lang.get(["person", "select"]), self.return_selected_person),
         ]
         for i in range(len(self.info)):
             if isinstance(self.info[i], Button):
@@ -36,20 +37,20 @@ class PersonDataDisplay:
 
 
 class PersonDataCreator:
-    def __init__(self, root: tk.BaseWidget, id_person: int, return_zone: Callable[[Person], None]) -> None:
+    def __init__(self, root: tk.BaseWidget, lang: Language, id_person: int, return_zone: Callable[[Person], None]) -> None:
         self.__return_zone = return_zone
         self.__root = root
         self.w = ttk.Labelframe(root, text="Add a person")
         self.label = [
-            ttk.Label(self.w, text="Id"),
-            ttk.Label(self.w, text="First Name"),
-            ttk.Label(self.w, text="Name"),
-            ttk.Label(self.w, text="Old Name"),
-            ttk.Label(self.w, text="Birth Date"),
-            ttk.Label(self.w, text="Birth Location"),
-            ttk.Label(self.w, text="Death Date"),
-            ttk.Label(self.w, text="Death Location"),
-            ttk.Label(self.w, text="Job"),
+            ttk.Label(self.w, text=lang.get(["person", "id"])),
+            ttk.Label(self.w, text=lang.get(["person", "first_name"])),
+            ttk.Label(self.w, text=lang.get(["person", "name"])),
+            ttk.Label(self.w, text=lang.get(["person", "old_name"])),
+            ttk.Label(self.w, text=lang.get(["person", "birth_date"])),
+            ttk.Label(self.w, text=lang.get(["person", "birth_location"])),
+            ttk.Label(self.w, text=lang.get(["person", "death_date"])),
+            ttk.Label(self.w, text=lang.get(["person", "death_location"])),
+            ttk.Label(self.w, text=lang.get(["person", "job"])),
         ]
         self.info: list[Entry | DateEntry] = [
             Entry(self.w, default_value=str(id_person), readonly=True),
@@ -66,7 +67,7 @@ class PersonDataCreator:
             self.label[i].grid(row=i, column=0, sticky=tk.E)
         for i in range(len(self.info)):
             self.info[i].w.grid(row=i, column=1, sticky=tk.NSEW)
-        self.btn = ttk.Button(self.w, text=big_btn_formater("Add this person"), command=self.return_new_person)
+        self.btn = ttk.Button(self.w, text=big_btn_formater(lang.get(["add-person", "add"])), command=self.return_new_person)
         self.btn.grid(row=len(self.info), column=0, columnspan=2, sticky=tk.NSEW)
         pass
 
@@ -103,20 +104,20 @@ class PersonDataCreator:
 
 
 class PersonDataEditor:
-    def __init__(self, root: tk.BaseWidget, person: Person, return_zone: Callable[[Literal["update", "delete"], Person], None]) -> None:
+    def __init__(self, root: tk.BaseWidget, lang: Language, person: Person, return_zone: Callable[[Literal["update", "delete"], Person], None]) -> None:
         self.person = person
         self.__return_zone = return_zone
         self.w = ttk.Labelframe(root, text=str(self.person))
         self.label = [
-            ttk.Label(self.w, text="Id"),
-            ttk.Label(self.w, text="First Name"),
-            ttk.Label(self.w, text="Name"),
-            ttk.Label(self.w, text="Old Name"),
-            ttk.Label(self.w, text="Birth Date"),
-            ttk.Label(self.w, text="Birth Location"),
-            ttk.Label(self.w, text="Death Date"),
-            ttk.Label(self.w, text="Death Location"),
-            ttk.Label(self.w, text="Job"),
+            ttk.Label(self.w, text=lang.get(["person", "id"])),
+            ttk.Label(self.w, text=lang.get(["person", "first_name"])),
+            ttk.Label(self.w, text=lang.get(["person", "name"])),
+            ttk.Label(self.w, text=lang.get(["person", "old_name"])),
+            ttk.Label(self.w, text=lang.get(["person", "birth_date"])),
+            ttk.Label(self.w, text=lang.get(["person", "birth_location"])),
+            ttk.Label(self.w, text=lang.get(["person", "death_date"])),
+            ttk.Label(self.w, text=lang.get(["person", "death_location"])),
+            ttk.Label(self.w, text=lang.get(["person", "job"])),
         ]
         self.info: tuple[
             Entry,

@@ -4,31 +4,24 @@ from utils.config import Language
 from utils.person import Person, Family
 from utils.watcher import Watcher
 
-person_columns = {
-    "id": "Id",
-    "firstname": "First Name",
-    "name": "Name",
-    "oldname": "Old Name",
-    "birthdate": "Birth Date",
-    "birthlocation": "Birth Location",
-    "deathdate": "Death Date",
-    "deathlocation": "Death Location",
-    "job": "Job",
-}
-family_columns = {
-    "id": "Id",
-    "dad": "Dad",
-    "mom": "Mom",
-    "childs": "Childs",
-}
-
 
 class SelectPerson:
     def __init__(self, root: tk.BaseWidget, lang: Language, list_person: dict[int, Person]) -> None:
         self.__persons = list_person
         self.w = ttk.Labelframe(root, text="Choose a person")
+        self.columns = {
+            "id": lang.get(["person", "id"]),
+            "firstname": lang.get(["person", "first_name"]),
+            "name": lang.get(["person", "name"]),
+            "oldname": lang.get(["person", "old_name"]),
+            "birthdate": lang.get(["person", "birth_date"]),
+            "birthlocation": lang.get(["person", "birth_location"]),
+            "deathdate": lang.get(["person", "death_date"]),
+            "deathlocation": lang.get(["person", "death_location"]),
+            "job": lang.get(["person", "job"]),
+        }
         self.selected_person_id = Watcher(-1)
-        self.tree = ttk.Treeview(self.w, columns=list(person_columns.keys()), show="headings")
+        self.tree = ttk.Treeview(self.w, columns=list(self.columns.keys()), show="headings")
         self.scrollbar = ttk.Scrollbar(self.w, orient="vertical", command=self.tree.yview)  # type: ignore
         self.tree["yscrollcommand"] = self.scrollbar.set
         self.__set_headings()
@@ -39,9 +32,9 @@ class SelectPerson:
         pass
 
     def __set_headings(self):
-        for i in range(len(person_columns)):
-            self.tree.heading(list(person_columns.keys())[i], text=person_columns[list(person_columns.keys())[i]])
-            self.tree.column(list(person_columns.keys())[i], width=(20 if list(person_columns.keys())[i] == "id" else 100))
+        for i in range(len(self.columns)):
+            self.tree.heading(list(self.columns.keys())[i], text=self.columns[list(self.columns.keys())[i]])
+            self.tree.column(list(self.columns.keys())[i], width=(20 if list(self.columns.keys())[i] == "id" else 100))
 
     def __append_all_persons(self):
         formated_persons: list[tuple[int, str, str, str | None, str, str | None, str, str | None, str | None]] = []
@@ -72,8 +65,14 @@ class SelectFamily:
     def __init__(self, root: tk.BaseWidget, lang: Language, list_family: dict[int, Family]) -> None:
         self.__families = list_family
         self.w = ttk.Labelframe(root, text="Choose a family")
+        self.columns = {
+            "id": lang.get(["person", "id"]),
+            "dad": lang.get(["families", "terms", "dad"]),
+            "mom": lang.get(["families", "terms", "mom"]),
+            "childs": lang.get(["families", "terms", "childs"]),
+        }
         self.selected_family_id = Watcher(-1)
-        self.tree = ttk.Treeview(self.w, columns=list(family_columns.keys()), show="headings")
+        self.tree = ttk.Treeview(self.w, columns=list(self.columns.keys()), show="headings")
         self.__set_headings()
         self.__append_all_families()
         self.tree.bind("<<TreeviewSelect>>", self.__family_selected)  # type: ignore
@@ -81,14 +80,14 @@ class SelectFamily:
         pass
 
     def __set_headings(self):
-        for i in range(len(family_columns)):
-            self.tree.heading(list(family_columns.keys())[i], text=family_columns[list(family_columns.keys())[i]])
-            if list(family_columns.keys())[i] == "id":
-                self.tree.column(list(family_columns.keys())[i], width=20)
-            elif list(family_columns.keys())[i] != "childs":
-                self.tree.column(list(family_columns.keys())[i], width=120)
+        for i in range(len(self.columns)):
+            self.tree.heading(list(self.columns.keys())[i], text=self.columns[list(self.columns.keys())[i]])
+            if list(self.columns.keys())[i] == "id":
+                self.tree.column(list(self.columns.keys())[i], width=20)
+            elif list(self.columns.keys())[i] != "childs":
+                self.tree.column(list(self.columns.keys())[i], width=120)
             else:
-                self.tree.column(list(family_columns.keys())[i], width=240)
+                self.tree.column(list(self.columns.keys())[i], width=240)
 
     def __format_childs(self, childs: list[Person]):
         if len(childs) == 0:

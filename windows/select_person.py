@@ -11,6 +11,7 @@ class SelectPersonWindow:
         self.w = tk.Toplevel(root)
         self.__return_zone = return_zone
         self.__persons = list_person
+        self.__lang = lang
         if with_none:
             self.__persons = {-1: Person(-1, "", "None")} | list_person
         self.person_selected: Person
@@ -25,7 +26,7 @@ class SelectPersonWindow:
         if self.right_part != None:
             self.right_part.w.destroy()
         print("Changing person")
-        self.right_part = PersonDataDisplay(self.w, self.person_selected, self.validate)
+        self.right_part = PersonDataDisplay(self.w, self.__lang, self.person_selected, self.validate)
         self.right_part.w.grid(row=0, column=1, sticky=tk.NSEW)
 
     def validate(self, person_id: int):

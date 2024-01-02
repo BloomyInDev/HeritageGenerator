@@ -30,15 +30,30 @@
         "close": "Fermer"
     },
     "add-person": {
-        "title": "Ajouter une personne"
+        "title": "Ajouter une personne",
+        "add": "Ajouter cette personne"
     },
     "edit-person": {},
+    "person": {
+        "id": "Id",
+        "name": "Nom",
+        "first_name": "Prénom",
+        "old_name": "Nom de jeune fille",
+        "birth_date": "Date de Naissance",
+        "birth_location": "Lieu de Naissance",
+        "death_date": "Date de Mort",
+        "death_location": "Lieu de Mort",
+        "job": "Métier",
+        "notes": "Notes",
+        "select": "Selectionner cette personne"
+    },
     "families": {
         "title": "Familles",
+        "family": "Famille",
         "terms": {
             "dad": "Père",
             "mom": "Mère",
-            "child": "Enfants"
+            "childs": "Enfants"
         }
     },
     "about": {
