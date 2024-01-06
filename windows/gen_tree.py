@@ -67,7 +67,7 @@ class GenTreeWindow:
         assert isinstance(self.tree, TreeGen)
         person_id = None
         if self.person_choosen == None and self.selected_item_tree_menu.get() != "full":
-            showerror(title_formater("Error"), "You need to specify a Person for this tree type")
+            showerror(title_formater(self.__ui.lang.get(["error", "title"])), self.__ui.lang.get(["gen-tree", "error", "no-person-selected"]))
             return
         else:
             person_id = self.person_choosen

@@ -18,13 +18,15 @@ coords_for_persons: dict[Literal["mom", "dad", "childs"], tuple[float, float]] =
 
 class FamiliesWindow:
     def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
+        global debug
         self.__ui = ui
         self.w = tk.Toplevel(root, width=500)
         self.w.title(title_formater(self.__ui.lang.get(["families", "title"])))
         self.menu = tk.Menu(self.w)
         self.w.config(menu=self.menu)
         self.menu.add_command(label=self.__ui.lang.get(["families", "new"]), command=lambda: CreateFamilyWindow(root, ui))
-        self.menu.add_command(label=self.__ui.lang.get(["families", "update"]), command=self.update)
+        if ui.debug:
+            self.menu.add_command(label="DEBUG>Update", command=self.update)
         self.selectfamily: SelectFamily = SelectFamily(self.w, ui.lang, ui.sql.get_all_families())
         self.selectfamily.w.grid(row=0, column=0, sticky=tk.NSEW, padx=2)
         self.selectfamily.selected_family_id.watch_changes(self.on_change)

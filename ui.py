@@ -14,7 +14,7 @@ from utils.person import Person
 from utils.tree import TreeGen
 from utils.config import Config, Language
 
-DEBUG = True
+debug = False
 
 
 class Ui(UiTemplate):
@@ -24,6 +24,7 @@ class Ui(UiTemplate):
         self.tree: TreeGen | None = None  # = TreeGen(self.persons, self.families)
         self.cfg = Config()
         self.lang = Language(self.cfg.get(["lang"]))
+        self.debug = debug
         self.w = tk.Tk()
         self.w.focus()
         self.w.title(title_formater(""))
@@ -69,7 +70,7 @@ class Ui(UiTemplate):
         act_menu.add_command(label=self.lang.get(["home", "gen-tree"]), command=lambda: Bootstraper().gen_tree(self.file_loader, self))
         self.menu.add_cascade(label=self.lang.get(["menu", "actions", "name"]), menu=act_menu)
         self.menu.add_command(label=self.lang.get(["menu", "about", "name"]), command=lambda: AboutWindow(self.w, self))
-        if DEBUG:
+        if debug:
             self.ui_define_debug_menu()
 
     def ui_define_debug_menu(self):
@@ -94,7 +95,7 @@ class Ui(UiTemplate):
         self.__edit_person_btn.grid(row=0, column=1, sticky=tk.NSEW)
         self.__edit_families_btn = ttk.Button(
             self.content_frame,
-            text=big_btn_formater("Families"),
+            text=big_btn_formater(self.lang.get(["home", "families"])),
             width=22,
             command=lambda: Bootstraper().edit_families(self.file_loader, self),
         )
@@ -160,5 +161,6 @@ class Bootstraper:
 
 
 if __name__ == "__main__":
+    debug = True
     Ui()
     tk.mainloop()

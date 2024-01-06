@@ -1,12 +1,15 @@
-from utils.sql import Sql
-from utils.tree import TreeGen
-from utils.config import Config, Language
+# from utils.sql import Sql
+# from utils.tree import TreeGen
+# from utils.config import Config, Language
+import ui
 
+ui.Ui()
+ui.tk.mainloop()
 # from utils.images import get_text_width, Font
 
 
-cfg = Config()
-lang = Language("en")
+# cfg = Config()
+# lang = Language("en")
 # sql = Sql("data.db")
 # list_persons = sql.get_all_persons()
 # list_families = sql.get_all_families()

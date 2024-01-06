@@ -2,6 +2,7 @@
     "home": {
         "add-person": "Add a person",
         "edit-person": "Edit a person",
+        "families": "Families",
         "gen-tree": "Generate Tree"
     },
     "gen-tree": {
@@ -35,23 +36,26 @@
     },
     "edit-person": {},
     "person": {
-        "id": "Id",
-        "name": "Name",
-        "first_name": "First name",
-        "old_name": "Old Name",
-        "birth_date": "Birth Date",
-        "birth_location": "Birth location",
-        "death_date": "Death date",
-        "death_location": "Death location",
-        "job": "Job",
-        "notes": "Notes",
-        "select": "Select this"
+        "terms": {
+            "id": "Id",
+            "name": "Name",
+            "first_name": "First name",
+            "old_name": "Old Name",
+            "birth_date": "Birth Date",
+            "birth_location": "Birth location",
+            "death_date": "Death date",
+            "death_location": "Death location",
+            "job": "Job",
+            "notes": "Notes"
+        },
+        "select": "Select this",
+        "save": "Save",
+        "del": "Delete this person"
     },
     "families": {
         "title": "Families",
         "family": "Family",
         "new": "Create a new family",
-        "update": "Update",
         "terms": {
             "dad": "Dad",
             "mom": "Mom",

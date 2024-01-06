@@ -10,15 +10,15 @@ class SelectPerson:
         self.__persons = list_person
         self.w = ttk.Labelframe(root, text="Choose a person")
         self.columns = {
-            "id": lang.get(["person", "id"]),
-            "firstname": lang.get(["person", "first_name"]),
-            "name": lang.get(["person", "name"]),
-            "oldname": lang.get(["person", "old_name"]),
-            "birthdate": lang.get(["person", "birth_date"]),
-            "birthlocation": lang.get(["person", "birth_location"]),
-            "deathdate": lang.get(["person", "death_date"]),
-            "deathlocation": lang.get(["person", "death_location"]),
-            "job": lang.get(["person", "job"]),
+            "id": lang.get(["person", "terms", "id"]),
+            "firstname": lang.get(["person", "terms", "first_name"]),
+            "name": lang.get(["person", "terms", "name"]),
+            "oldname": lang.get(["person", "terms", "old_name"]),
+            "birthdate": lang.get(["person", "terms", "birth_date"]),
+            "birthlocation": lang.get(["person", "terms", "birth_location"]),
+            "deathdate": lang.get(["person", "terms", "death_date"]),
+            "deathlocation": lang.get(["person", "terms", "death_location"]),
+            "job": lang.get(["person", "terms", "job"]),
         }
         self.selected_person_id = Watcher(-1)
         self.tree = ttk.Treeview(self.w, columns=list(self.columns.keys()), show="headings")
@@ -45,12 +45,12 @@ class SelectPerson:
                     person.id,
                     person.first_name,
                     person.name,
-                    person.old_name,
-                    person.birth_date.get_str() if person.birth_date != None else "Unknown",
-                    person.birth_location if person.birth_location != None else "Unknown",
-                    person.death_date.get_str() if person.death_date != None else "Unknown",
-                    person.death_location if person.death_location != None else "Unknown",
-                    person.job if person.job != None else "Unknown",
+                    person.old_name if person.old_name != None else "",
+                    person.birth_date.get_str() if person.birth_date != None else "",
+                    person.birth_location if person.birth_location != None else "",
+                    person.death_date.get_str() if person.death_date != None else "",
+                    person.death_location if person.death_location != None else "",
+                    person.job if person.job != None else "",
                 )
             )
         for person in formated_persons:
@@ -66,7 +66,7 @@ class SelectFamily:
         self.__families = list_family
         self.w = ttk.Labelframe(root, text="Choose a family")
         self.columns = {
-            "id": lang.get(["person", "id"]),
+            "id": lang.get(["person", "terms", "id"]),
             "dad": lang.get(["families", "terms", "dad"]),
             "mom": lang.get(["families", "terms", "mom"]),
             "childs": lang.get(["families", "terms", "childs"]),

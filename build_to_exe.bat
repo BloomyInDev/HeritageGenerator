@@ -12,7 +12,7 @@ pyinstaller --noconfirm ^
     --name "Heritage Generator" ^
     --noupx ^
     --icon "./assets/icon.ico" ^
-    ui.py
+    main.py
 
 echo Copying assets
 robocopy ./assets ./dist/assets > nul

@@ -23,7 +23,7 @@ class AboutWindow:
         # Setup the image displayer
         self.tk_image = ImageTk.PhotoImage(self.image)
         self.image_displayer = ttk.Label(self.w, image=self.tk_image)
-        self.image_displayer.grid(row=0, column=0, sticky=tk.EW, padx=(self.image.width - self.w.winfo_width()) / 2)
+        self.image_displayer.grid(row=0, column=0, sticky=tk.EW, padx=(self.image.width - self.w.winfo_width()))
 
         # Setup all the rest
 
