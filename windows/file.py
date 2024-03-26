@@ -1,6 +1,6 @@
 import tkinter.messagebox as msgbox
 import tkinter.filedialog as fdiag
-from utils.file import FileLoader
+from utils.fileloader import FileLoader
 from components.common import title_formater
 from utils.ui_template import UiTemplate
 

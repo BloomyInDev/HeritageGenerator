@@ -1,6 +1,7 @@
 import sqlite3, os
 from utils.person import Person, Family
 from utils.date import Date, parse_date
+from utils.file import FileInDb
 
 
 class Sql:
@@ -51,6 +52,13 @@ class Sql:
             "AdditionalFiles"	TEXT,
             PRIMARY KEY("Id" AUTOINCREMENT)
         );
+        CREATE TABLE "Files" (
+            "Id"    INTEGER NOT NULL UNIQUE
+            "Filename" TEXT NOT NULL
+            "PersonId" INTEGER NOT NULL
+            PRIMARY KEY("Id" AUTOINCREMENT)
+            FOREIGN KEY (PersonID) REFERENCES Person(Id)
+        )
         """
         self.__sql_conn.executescript(init_db_cmd)
         self.__sql_conn.commit()
@@ -170,6 +178,22 @@ class Sql:
 
     def get_all_families(self):
         return self.parse_all_families(self.get_all_families_raw(), self.get_all_persons())
+
+    def get_all_files(self):
+        return self.parse_all_files(self.get_all_files_raw())
+
+    def get_all_files_raw(self):
+        data: list[tuple[int, str, int]] = []
+        cursor = self.__sql_conn.cursor()
+        for row in cursor.execute("SELECT * FROM Files"):
+            data.append(row)
+        return data
+
+    def parse_all_files(self, to_parse: list[tuple[int, str, int]]):
+        files: dict[int, FileInDb] = {}
+        for file in to_parse:
+            files[file[0]] = FileInDb(file[0], file[1], file[2])
+        return files
 
     def create_new_person(self, person: Person):
         assert isinstance(person, Person)

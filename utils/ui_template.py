@@ -1,6 +1,6 @@
 import tkinter as tk
 from utils.sql import Sql
-from utils.file import FileLoader
+from utils.fileloader import FileLoader
 from utils.tree import TreeGen
 from utils.config import Config, Language
 

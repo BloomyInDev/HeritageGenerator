@@ -8,7 +8,7 @@ from windows.families import FamiliesWindow
 from windows.gen_tree import GenTreeWindow
 from windows.about import AboutWindow
 from utils.ui_template import UiTemplate
-from utils.file import FileLoader
+from utils.fileloader import FileLoader
 from utils.sql import Sql
 from utils.person import Person
 from utils.tree import TreeGen
