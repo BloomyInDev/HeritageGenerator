@@ -149,6 +149,7 @@ class PersonDataEditor:
         self.save_btn.grid(row=0, column=0, sticky=tk.NSEW)
         self.del_btn = ttk.Button(self.btn_frame, text=lang.get(["person", "del"]), command=self.return_deleted_person)
         self.del_btn.grid(row=0, column=1, sticky=tk.NSEW)
+        self.files_btn = ttk.Button(self.btn_frame, text=lang.get(["person","files"]), command=self.open_files_menu)
         self.btn_frame.grid(row=len(self.info), column=0, columnspan=2, sticky=tk.NSEW)
 
         pass
@@ -182,3 +183,7 @@ class PersonDataEditor:
             self.info[8].get() if self.info[8].get() != "" else None,
         )
         self.__return_zone("update", person)
+
+    def open_files_menu(self):
+        
+        pass

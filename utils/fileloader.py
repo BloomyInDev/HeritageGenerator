@@ -38,6 +38,7 @@ class FileLoader:
         shutil.move("./temp/file/file.zip", "./temp/file/file.hgb")
 
     def create_new_file(self):
+        self.clear_temp()
         if not os.path.exists("./temp/file"):
             os.mkdir("./temp/file")
         if not os.path.exists("./temp/file/cache"):
@@ -46,3 +47,8 @@ class FileLoader:
         os.mkdir("./temp/file/cache/pp")
         self.file_loaded = True
         return Sql("./temp/file/cache/data.db", create_from_scratch=True)
+
+    def clear_temp(self):
+        if os.path.exists("./temp"):
+            shutil.rmtree("./temp")
+        os.mkdir("./temp")

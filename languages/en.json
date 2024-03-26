@@ -96,6 +96,10 @@
         "close": {
             "title": "Save before close",
             "msg": "Do you want to save before exiting the app ?"
+        },
+        "create-new": {
+            "title": "Save before create a new file",
+            "msg": "Do you want to save before creating a new file ?"
         }
     },
     "files": {

@@ -6,7 +6,6 @@ from utils.person import Family, Person
 from utils.ui_template import UiTemplate
 from components.selector import SelectFamily
 from components.family_part import ChildPart, FamilyPart
-from windows.select_person import SelectPersonWindow
 from PIL import Image, ImageTk
 
 coords_for_persons: dict[Literal["mom", "dad", "childs"], tuple[float, float]] = {
@@ -182,6 +181,8 @@ class CreateFamilyWindow:
                 convert_person_id_to_person(self.data["childs"], persons),
             )
         )
+
+        self.w.destroy()
 
 
 def convert_person_id_to_person(person_id_list: list[int], persons: dict[int, Person]):

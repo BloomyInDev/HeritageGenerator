@@ -53,10 +53,10 @@ class Sql:
             PRIMARY KEY("Id" AUTOINCREMENT)
         );
         CREATE TABLE "Files" (
-            "Id"    INTEGER NOT NULL UNIQUE
-            "Filename" TEXT NOT NULL
-            "PersonId" INTEGER NOT NULL
-            PRIMARY KEY("Id" AUTOINCREMENT)
+            "Id"    INTEGER NOT NULL UNIQUE,
+            "Filename" TEXT NOT NULL,
+            "PersonId" INTEGER NOT NULL,
+            PRIMARY KEY("Id" AUTOINCREMENT),
             FOREIGN KEY (PersonID) REFERENCES Person(Id)
         )
         """

@@ -111,7 +111,11 @@ class Ui(UiTemplate):
         pass
 
     def ui_new_file(self):
-        # TODO make this method
+        d = file.CreateNewFile(self, self.file_loader)
+        if d != False:
+            self.sql = d
+            self.refresh_data()
+            self.change_btn_state(not self.file_loader.file_loaded)
         pass
 
     def ui_open_file(self):

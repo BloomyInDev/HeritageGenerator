@@ -96,6 +96,10 @@
         "close": {
             "title": "Sauvegarder avant fermeture",
             "msg": "Voulez vous sauvegarder avant de fermer l'application ?"
+        },
+        "create-new": {
+            "title": "Sauvegarder avant de créer un nouveau fichier",
+            "msg": "Voulez vous sauvegarder avant de créer un nouveau fichier ?"
         }
     },
     "files": {

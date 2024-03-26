@@ -9,7 +9,11 @@ from utils.ui_template import UiTemplate
 class AddPersonWindow:
     def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
         self.w = tk.Toplevel(root)
-        self.addzone = PersonDataCreator(self.w, ui.lang, max(ui.sql.get_all_persons().keys()) + 1, ui.sql.create_new_person)
+        try:
+            id = max(ui.sql.get_all_persons().keys()) + 1
+        except ValueError:
+            id = 0
+        self.addzone = PersonDataCreator(self.w, ui.lang, id, ui.sql.create_new_person)
         self.addzone.w.grid()
 
 

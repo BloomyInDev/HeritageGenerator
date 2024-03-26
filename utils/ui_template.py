@@ -13,4 +13,5 @@ class UiTemplate:
         self.cfg: Config
         self.lang: Language
         self.w: tk.Tk
+        self.debug: bool
         pass
