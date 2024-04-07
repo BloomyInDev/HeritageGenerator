@@ -58,14 +58,14 @@ class Language:
         else:
             result = self.lang_list[alt_lang]  # type: ignore
             can_retry = False
-        for item in item_lst:  # type: ignore
+        for item_name in item_lst:  # type: ignore
             try:
-                result = result[item]  # type: ignore
+                result = result[item_name]  # type: ignore
             except KeyError:
                 if can_retry:
                     return self.get(item, "en")
                 else:
-                    print(f"[Lang] Missing language translation in {item_lst}")
+                    print(f"[Lang] Missing language translation in {item}")
                     return ""
         return result  # type: ignore
 

@@ -109,6 +109,7 @@ class Sql:
                 birth_date: Date | None = parse_date(person[4])
             if isinstance(person[6], str):
                 death_date: Date | None = parse_date(person[6])
+
             newperson = Person(
                 person[0],
                 person[1],
@@ -120,6 +121,9 @@ class Sql:
                 person[7],
                 person[8],
                 person[9],
+                self.get_files_for_person(
+                    person[0],
+                ),
             )
             persons[newperson.id] = newperson
         return persons
@@ -193,6 +197,12 @@ class Sql:
         files: dict[int, FileInDb] = {}
         for file in to_parse:
             files[file[0]] = FileInDb(file[0], file[1], file[2])
+        return files
+
+    def get_files_for_person(self, person_id: int):
+        cursor = self.__sql_conn.cursor()
+        data: list[tuple[int, str, int]] = [row for row in cursor.execute(f"SELECT * FROM Files WHERE PersonId = {person_id}")]
+        files = [FileInDb(file[0], file[1], file[2]) for file in data]
         return files
 
     def create_new_person(self, person: Person):
@@ -312,6 +322,41 @@ class Sql:
         assert id in self.get_all_families().keys()
         self.__sql_conn.cursor().execute("DELETE FROM Family WHERE Id=?", (id,))
         self.__sql_conn.commit()
+
+    def create_new_file(self, file: FileInDb):
+        assert isinstance(file, FileInDb)
+        file_list = self.get_all_files()
+        if file.id in file_list.keys():
+            new_id = 0
+            for i in file_list.keys():
+                if i > new_id:
+                    new_id = i
+            print(f"New id: {file.id} to {new_id}")
+            file.id = new_id + 1
+        self.__sql_conn.cursor().execute("INSERT INTO Files(Id,Filename,PersonId) VALUES (?,?,?)", (file.id, file.name, file.idPerson))
+        self.__sql_conn.commit()
+        return
+
+    def edit_file(self, file: FileInDb):
+        assert isinstance(file, FileInDb)
+        assert file.id in self.get_all_files().keys()
+        self.__sql_conn.cursor().execute(
+            f"UPDATE Files SET Id=?, Filename=?, PersonId=? WHERE Id={file.id}",
+            (
+                file.id,
+                file.name,
+                file.idPerson,
+            ),
+        )
+        self.__sql_conn.commit()
+        return
+
+    def delete_file(self, id: int):
+        assert isinstance(id, int)
+        assert id in self.get_all_files().keys()
+        self.__sql_conn.cursor().execute("DELETE FROM Files WHERE Id=?", (id,))
+        self.__sql_conn.commit()
+        return
 
     def close(self):
         self.__sql_conn.commit()

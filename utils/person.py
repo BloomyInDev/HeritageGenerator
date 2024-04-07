@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Literal
 from utils.date import Date
+from utils.file import FileInDb
 
 
 class Person:
@@ -16,7 +17,7 @@ class Person:
         death_location: str | None = None,
         job: str | None = None,
         notes: str | None = None,
-        additional_files: list[str] = [],
+        additional_files: list[FileInDb] = [],
     ) -> None:
         assert isinstance(id, int)
         assert isinstance(name, str)
@@ -62,7 +63,7 @@ class Person:
         # for e in additional_files:
         #    assert isinstance(e, str)
         # self.__additional_files = additional_files
-        self.__additional_files: list[str] = []
+        self.__additional_files: list[FileInDb] = additional_files
 
         self.attributes: list[tuple[Literal["dad", "mom", "child"], Family]] = []
         pass
@@ -100,7 +101,7 @@ class Person:
             final_str += self.death_location
         return final_str
 
-    def get_additional_files(self, as_string: bool = False) -> list[str] | str | None:
+    def get_additional_files(self, as_string: bool = False) -> list[FileInDb] | str | None:
         if as_string:
             final_string = ""
             for file in self.__additional_files:

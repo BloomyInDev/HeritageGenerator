@@ -50,7 +50,8 @@
         },
         "select": "Selectionner cette personne",
         "save": "Sauvegarder",
-        "del": "Supprimer cette personne"
+        "del": "Supprimer cette personne",
+        "files": "Gérer les fichiers"
     },
     "families": {
         "title": "Familles",
@@ -61,6 +62,9 @@
             "mom": "Mère",
             "childs": "Enfants"
         }
+    },
+    "additional-files": {
+        "title": "Fichiers suplémentaires de {person-name}"
     },
     "about": {
         "title": "A propos",

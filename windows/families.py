@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from typing import Literal
+from typing import Callable, Literal
 from components.common import Button, title_formater, big_btn_formater
 from utils.person import Family, Person
 from utils.ui_template import UiTemplate
@@ -17,13 +17,12 @@ coords_for_persons: dict[Literal["mom", "dad", "childs"], tuple[float, float]] =
 
 class FamiliesWindow:
     def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
-        global debug
         self.__ui = ui
         self.w = tk.Toplevel(root, width=500)
         self.w.title(title_formater(self.__ui.lang.get(["families", "title"])))
         self.menu = tk.Menu(self.w)
         self.w.config(menu=self.menu)
-        self.menu.add_command(label=self.__ui.lang.get(["families", "new"]), command=lambda: CreateFamilyWindow(root, ui))
+        self.menu.add_command(label=self.__ui.lang.get(["families", "new"]), command=lambda: CreateFamilyWindow(root, ui, self.update))
         if ui.debug:
             self.menu.add_command(label="DEBUG>Update", command=self.update)
         self.selectfamily: SelectFamily = SelectFamily(self.w, ui.lang, ui.sql.get_all_families())
@@ -124,7 +123,7 @@ class FamiliesWindow:
 
 
 class CreateFamilyWindow:
-    def __init__(self, root: tk.Tk, ui: UiTemplate) -> None:
+    def __init__(self, root: tk.Tk, ui: UiTemplate, update_subwindow_cmd: Callable[[], None]) -> None:
         self.w = tk.Toplevel(root)
         self.box = ttk.Labelframe(self.w)
         self.box.grid()
