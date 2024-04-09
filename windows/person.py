@@ -37,7 +37,7 @@ class EditPersonWindow:
         if self.right_part != None:
             self.right_part.w.destroy()
         print("Changing person")
-        self.right_part = PersonDataEditor(self.w, self.__ui.lang, self.person_selected, self.validate)
+        self.right_part = PersonDataEditor(self.w, self.__ui, self.person_selected, self.validate)
         self.right_part.w.grid(row=0, column=1, sticky=tk.NSEW)
 
     def validate(self, act: Literal["update", "delete"], person: Person):
