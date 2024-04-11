@@ -88,7 +88,12 @@ class TreeGen:
         Generate images for every Person and Family
         """
         for person_id in self.__persons.keys():
-            PersonCard(self.__persons[person_id], prepare_image=True).save()
+            person = self.__persons[person_id]
+            person_img_path = f"./temp/file/cache/pp/{person.id}{person.first_name.lower()}.png"
+            if os.path.isfile(person_img_path):
+                PersonCard(person, image=person_img_path, prepare_image=True).save()
+            else:
+                PersonCard(person, prepare_image=True).save()
         for family_id in self.__families.keys():
             FamilyCard(self.__families[family_id], prepare_image=True).save()
 

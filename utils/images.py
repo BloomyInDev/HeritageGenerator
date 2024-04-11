@@ -23,11 +23,8 @@ class PersonCard:
         pass
 
     def draw_image(self):
-        if self.__img_person == "./assets/person.png":
-            img_default = Image.open(self.__img_person)
-            self.__img.paste(img_default, (796 - img_default.size[0], 4))
-        else:
-            pass
+        person_img = Image.open(self.__img_person)
+        self.__img.paste(person_img, (796 - person_img.size[0], 4))
         draw_zone = ImageDraw.Draw(self.__img)
         color_outline = (30, 170, 255)
         draw_zone.rounded_rectangle((4, 4, 796, 496), 45, None, color_outline, 6)
@@ -49,10 +46,13 @@ class PersonCard:
 
 
 class ProfilePicture:
-    def __init__(self, img: str, person: Person, prepare_image: bool = False) -> None:
+    def __init__(self, img: str | Image.Image, person: Person, prepare_image: bool = False) -> None:
         assert isinstance(person, Person)
-        assert os.path.isfile(img)
-        self.__img_obj:Image.Image = Image.open(img)
+        if isinstance(img, str):
+            assert os.path.isfile(img)
+            self.__img_obj: Image.Image = Image.open(img)
+        else:
+            self.__img_obj: Image.Image = img
         self.__person = person
         if prepare_image:
             self.draw_image()
@@ -69,9 +69,13 @@ class ProfilePicture:
     def save(self):
         if not os.path.exists("./temp"):
             os.mkdir("./temp")
-        if not os.path.exists("./temp/pp"):
-            os.mkdir("./temp/pp")
-        self.__img_obj.save(f"./temp/pp/{self.__person.id}{self.__person.first_name.lower()}.png", "PNG")
+        if not os.path.exists("./temp/file"):
+            os.mkdir("./temp/file")
+        if not os.path.exists("./temp/file/cache"):
+            os.mkdir("./temp/file/cache")
+        if not os.path.exists("./temp/file/cache/pp"):
+            os.mkdir("./temp/file/cache/pp")
+        self.__img_obj.save(f"./temp/file/cache/pp/{self.__person.id}{self.__person.first_name.lower()}.png", "PNG")
 
 
 class FamilyCard:

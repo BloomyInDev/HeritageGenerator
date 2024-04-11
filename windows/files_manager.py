@@ -8,6 +8,7 @@ from typing import Any
 from PIL import Image, ImageTk
 from components.common import title_formater
 from utils.config import Language
+from utils.images import ProfilePicture
 from utils.person import Person
 from utils.ui_template import UiTemplate
 
@@ -50,45 +51,87 @@ class PPChangeWindow:
         if self.img_path == "":
             del self
         else:
-            print(self.img_path)
+            self.lang = lang
+            self.__ui = ui
+            self.person = person
+
+            self.original_size = (150, 194)
             self.img: Image.Image = Image.open(self.img_path)
             self.img.thumbnail(ui.cfg.get(["images", "resize"]), Image.Resampling.LANCZOS)
             self.img_tk = ImageTk.PhotoImage(self.img)
             self.w = tk.Toplevel(root)
             self.canvas = tk.Canvas(
                 self.w,
-                width=self.img.width,
-                height=self.img.height,
+                width=self.img.width - 1,
+                height=self.img.height - 1,
             )
             self.canvas.create_image(0, 0, anchor="nw", image=self.img_tk)  # type: ignore
             self.canvas.bind("<Button-1>", self.canvas_click_callback)
             self.canvas.grid(row=0, column=0)
+
             self.crop_pos = [0, 0]
-            self.original_size = (150, 194)
             self.factor = 1
-            self.size = [150, 194]
+
+            self.size = [0, 0]
+            self.tk_slider_value = tk.DoubleVar()
+            self.slider = ttk.Scale(self.w, from_=1, to=self.calculate_max_factor(), orient="horizontal", variable=self.tk_slider_value, command=self.slider_callback)
+            self.slider.grid(row=1, column=0, sticky=tk.EW)
+            self.validate_btn = ttk.Button(self.w, text="Valider", command=self.validate_btn_callback)
+            self.validate_btn.grid(row=2, column=0, sticky=tk.EW)
+            self.calculate_size_with_factor()
             self.draw_on_canvas()
         pass
+
+    def calculate_max_factor(self):
+        max_x = self.img.width
+        max_y = self.img.height
+        x = self.original_size[0]
+        y = self.original_size[1]
+        if max_x / x < max_y / y:
+            return max_x / x
+        else:
+            return max_y / y
 
     def canvas_click_callback(self, event: Any):
         x, y = event.x, event.y
         # It will always be the case (just for my IDE)
         assert isinstance(x, int)
         assert isinstance(y, int)
-        if x + 150 > self.img.width:
-            x = self.img.width - 150
-        if y + 194 > self.img.height:
-            y = self.img.height - 194
+        if x + self.size[0] > self.img.width:
+            x = self.img.width - self.size[0]
+        if y + self.size[1] > self.img.height:
+            y = self.img.height - self.size[1]
 
         self.crop_pos = [x, y]
         self.draw_on_canvas()
 
+    def calculate_size_with_factor(self):
+
+        future_size = [self.original_size[0] * self.factor, self.original_size[1] * self.factor]
+        if round(self.crop_pos[0] + future_size[0]) > self.img.width:
+            self.crop_pos[0] = round(self.img.width - future_size[0])
+        if round(self.crop_pos[1] + future_size[1]) > self.img.height:
+            self.crop_pos[1] = round(self.img.width - future_size[1])
+        self.size = future_size
+
     def draw_on_canvas(self):
         self.canvas.create_image(0, 0, anchor="nw", image=self.img_tk)  # type: ignore
         self.canvas.create_rectangle(
-            self.crop_pos[0],
+            self.crop_pos[0] + 1,
             self.crop_pos[1],
-            self.crop_pos[0] + (self.original_size[0] * self.factor),
-            self.crop_pos[1] + (self.original_size[1] * self.factor),
+            self.crop_pos[0] + self.size[0],
+            self.crop_pos[1] + self.size[1],
             width=2,
         )
+
+    def slider_callback(self, event: Any):
+        self.factor = self.tk_slider_value.get()
+        self.calculate_size_with_factor()
+        self.draw_on_canvas()
+
+    def validate_btn_callback(self):
+        ProfilePicture(
+            self.img.crop((round(self.crop_pos[0]), round(self.crop_pos[1]), round(self.crop_pos[0] + self.size[0]), round(self.crop_pos[1] + self.size[1]))), self.person, True
+        ).save()
+        self.w.destroy()
+        del self
