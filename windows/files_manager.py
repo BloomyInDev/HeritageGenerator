@@ -4,7 +4,7 @@ import tkinter.messagebox as msgbox
 import tkinter.filedialog as fdiag
 import os
 from turtle import width
-from typing import Any
+from typing import Any, Callable
 from PIL import Image, ImageTk
 from components.common import title_formater
 from utils.config import Language
@@ -27,34 +27,44 @@ class AdditionalFilesManagerWindow:
 
     def __create_pp_frame(self):
         self.ppFrame = ttk.Labelframe(self.w, text="Picture")
-        self.image_src = f"./temp/cache/{self.person.id}.png" if os.path.isfile(f"./temp/cache/{self.person.id}.png") else "./assets/person.png"
+        self.image_src = (
+            f"./temp/file/cache/pp/{self.person.id}{self.person.first_name.lower()}.png"
+            if os.path.isfile(f"./temp/file/cache/pp/{self.person.id}{self.person.first_name.lower()}.png")
+            else "./assets/person.png"
+        )
         self.image = Image.open(self.image_src)
         self.tk_image = ImageTk.PhotoImage(self.image)
         self.image_displayer = ttk.Label(self.ppFrame, image=self.tk_image)
         self.image_displayer.grid(row=0, column=0, sticky=tk.NSEW)
-        self.change_pp_btn = ttk.Button(self.ppFrame, command=self.call_change_pp)
-        self.change_pp_btn.grid(row=0, column=10)
-        self.ppFrame.grid(row=0, column=1)
+        self.change_pp_btn = ttk.Button(self.ppFrame, text="Change", command=self.call_change_pp)
+        self.change_pp_btn.grid(row=1, column=0, sticky=tk.EW)
+        self.ppFrame.grid(row=1, column=0)
 
     def __create_additional_files_frame(self):
         self.additionalFilesFrame = ttk.Labelframe(self.w, text="Additional files")
-        self.additionalFilesFrame.grid(row=0, column=2)
+        self.additionalFilesFrame.grid(row=2, column=0)
 
     def call_change_pp(self):
-        self.change_pp = PPChangeWindow(self.w, self.__ui, self.lang, self.person)
+        self.change_pp = PPChangeWindow(self.w, self.__ui, self.lang, self.person, self.update_data)
         return
+
+    def update_data(self):
+        self.ppFrame.destroy()
+        self.additionalFilesFrame.destroy()
+        self.__create_pp_frame()
+        self.__create_additional_files_frame()
 
 
 class PPChangeWindow:
-    def __init__(self, root: tk.BaseWidget, ui: UiTemplate, lang: Language, person: Person) -> None:
+    def __init__(self, root: tk.BaseWidget, ui: UiTemplate, lang: Language, person: Person, done_callback: Callable[[], None]) -> None:
+        self.lang = lang
+        self.__ui = ui
+        self.person = person
+        self.callback = done_callback
         self.img_path = fdiag.askopenfilename(filetypes=[("Image", "*.png")])
         if self.img_path == "":
             del self
         else:
-            self.lang = lang
-            self.__ui = ui
-            self.person = person
-
             self.original_size = (150, 194)
             self.img: Image.Image = Image.open(self.img_path)
             self.img.thumbnail(ui.cfg.get(["images", "resize"]), Image.Resampling.LANCZOS)
@@ -134,4 +144,5 @@ class PPChangeWindow:
             self.img.crop((round(self.crop_pos[0]), round(self.crop_pos[1]), round(self.crop_pos[0] + self.size[0]), round(self.crop_pos[1] + self.size[1]))), self.person, True
         ).save()
         self.w.destroy()
+        self.callback()
         del self

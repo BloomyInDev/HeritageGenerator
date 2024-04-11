@@ -24,7 +24,7 @@ class PersonCard:
 
     def draw_image(self):
         person_img = Image.open(self.__img_person)
-        self.__img.paste(person_img, (796 - person_img.size[0], 4))
+        self.__img.paste(person_img, (800 - (person_img.size[0] + 6), 6))
         draw_zone = ImageDraw.Draw(self.__img)
         color_outline = (30, 170, 255)
         draw_zone.rounded_rectangle((4, 4, 796, 496), 45, None, color_outline, 6)
@@ -36,6 +36,11 @@ class PersonCard:
             draw_zone.text((24, 342), self.__person.job, (0, 0, 0), Font.small)  # type: ignore
         draw_zone.text((24, 392), self.__person.get_birth_str(), (0, 0, 0), Font.small)  # type: ignore
         draw_zone.text((24, 442), self.__person.get_death_str(), (0, 0, 0), Font.small)  # type: ignore
+        mask = Image.new("L", self.__img.size, 0)
+        ImageDraw.Draw(mask).rounded_rectangle((4, 4, 796, 496), 45, 255, 255, 6)
+        new_img_obj = Image.new("RGBA", self.__img.size, (0, 0, 0, 0))
+        new_img_obj.paste(self.__img, (0, 0), mask)
+        self.__img: Image.Image = new_img_obj
 
     def save(self):
         if not os.path.exists("./temp"):
