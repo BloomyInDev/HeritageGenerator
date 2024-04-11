@@ -15,7 +15,7 @@ class PreviewWindow:
 
         # Load the image and process it
         self.image = Image.open(img_path)
-        max_res = ui.cfg.get(["preview", "window_size"])
+        max_res = ui.cfg.get(["images", "resize"])
         self.image.thumbnail(max_res, Image.Resampling.LANCZOS)
 
         # Settings for the new window

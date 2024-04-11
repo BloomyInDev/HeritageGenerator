@@ -1,9 +1,10 @@
 import json, os
+from typing import Any
 
 default_cfg = {
     "lang": "en",
-    "preview": {
-        "window_size": (1166, 648),
+    "images": {
+        "resize": (1166, 648),
     },
 }
 
@@ -33,6 +34,19 @@ class Config:
             result = result[p[0]]
             p.pop(0)
         return result
+
+    def set(self, path: list[str], val: Any):
+        p = path
+        result = self.cfg
+        while len(p) != 0:
+            result = result[p[0]]
+            p.pop(0)
+        result = val
+
+    def reload(self):
+        self.cfg: Any = {}
+        with open("./config.json", "r") as f:
+            self.cfg = json.load(f)
 
 
 class Language:

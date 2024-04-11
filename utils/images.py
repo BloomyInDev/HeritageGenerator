@@ -52,7 +52,7 @@ class ProfilePicture:
     def __init__(self, img: str, person: Person, prepare_image: bool = False) -> None:
         assert isinstance(person, Person)
         assert os.path.isfile(img)
-        self.__img_obj = Image.open(img)
+        self.__img_obj:Image.Image = Image.open(img)
         self.__person = person
         if prepare_image:
             self.draw_image()

@@ -3,6 +3,7 @@ import tkinter.ttk as ttk
 import tkinter.messagebox as msgbox
 import tkinter.filedialog as fdiag
 import os
+from turtle import width
 from typing import Any
 from PIL import Image, ImageTk
 from components.common import title_formater
@@ -39,22 +40,55 @@ class AdditionalFilesManagerWindow:
         self.additionalFilesFrame.grid(row=0, column=2)
 
     def call_change_pp(self):
-        self.change_pp = PPChangeWindow(self.w, self.lang, self.person)
+        self.change_pp = PPChangeWindow(self.w, self.__ui, self.lang, self.person)
         return
 
 
 class PPChangeWindow:
-    def __init__(self, root: tk.BaseWidget, lang: Language, person: Person) -> None:
-        self.img_path = fdiag.askopenfilename()
-        self.w = tk.Toplevel(root)
-        self.canvas = tk.Canvas(
-            self.w,
-            width=600,
-            height=400,
-        )
-        self.canvas.bind("<Button-1>", self.callback)
-        self.canvas.grid(row=0, column=0)
+    def __init__(self, root: tk.BaseWidget, ui: UiTemplate, lang: Language, person: Person) -> None:
+        self.img_path = fdiag.askopenfilename(filetypes=[("Image", "*.png")])
+        if self.img_path == "":
+            del self
+        else:
+            print(self.img_path)
+            self.img: Image.Image = Image.open(self.img_path)
+            self.img.thumbnail(ui.cfg.get(["images", "resize"]), Image.Resampling.LANCZOS)
+            self.img_tk = ImageTk.PhotoImage(self.img)
+            self.w = tk.Toplevel(root)
+            self.canvas = tk.Canvas(
+                self.w,
+                width=self.img.width,
+                height=self.img.height,
+            )
+            self.canvas.create_image(0, 0, anchor="nw", image=self.img_tk)  # type: ignore
+            self.canvas.bind("<Button-1>", self.canvas_click_callback)
+            self.canvas.grid(row=0, column=0)
+            self.crop_pos = [0, 0]
+            self.original_size = (150, 194)
+            self.factor = 1
+            self.size = [150, 194]
+            self.draw_on_canvas()
         pass
 
-    def callback(self, event: Any):
-        print("clicked at", event.x, event.y)
+    def canvas_click_callback(self, event: Any):
+        x, y = event.x, event.y
+        # It will always be the case (just for my IDE)
+        assert isinstance(x, int)
+        assert isinstance(y, int)
+        if x + 150 > self.img.width:
+            x = self.img.width - 150
+        if y + 194 > self.img.height:
+            y = self.img.height - 194
+
+        self.crop_pos = [x, y]
+        self.draw_on_canvas()
+
+    def draw_on_canvas(self):
+        self.canvas.create_image(0, 0, anchor="nw", image=self.img_tk)  # type: ignore
+        self.canvas.create_rectangle(
+            self.crop_pos[0],
+            self.crop_pos[1],
+            self.crop_pos[0] + (self.original_size[0] * self.factor),
+            self.crop_pos[1] + (self.original_size[1] * self.factor),
+            width=2,
+        )
