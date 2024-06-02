@@ -335,7 +335,7 @@ class Sql:
             file.id = new_id + 1
         self.__sql_conn.cursor().execute("INSERT INTO Files(Id,Filename,PersonId) VALUES (?,?,?)", (file.id, file.name, file.idPerson))
         self.__sql_conn.commit()
-        return
+        return file
 
     def edit_file(self, file: FileInDb):
         assert isinstance(file, FileInDb)
