@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox as msgbox, filedialog as fdiag
 from typing import Callable, Literal
 from components.common import title_formater
 from utils.file import FileInDb
@@ -12,19 +12,14 @@ class PersonDataFileList:
         root: tk.BaseWidget,
         ui: UiTemplate,
         list_files: list[FileInDb],
-        callback: Callable[[int, Literal["add", "remove"]], None],
+        callback: Callable[[FileInDb, Literal["add", "remove"]], None],
         direction: Literal["horizontal", "vertical"] = "vertical",
     ) -> None:
         self.__list_childs = list_files
         self.__callback = callback
         self.__ui = ui
-        self.person_types = {
-            "mom": ui.lang.get(["families", "terms", "mom"]),
-            "dad": ui.lang.get(["families", "terms", "dad"]),
-            "childs": ui.lang.get(["families", "terms", "childs"]),
-        }
         self.w = ttk.Frame(root)
-        self.btn = ttk.Button(self.w, text=self.person_types["childs"])
+        self.btn = ttk.Button(self.w, text=self.__ui.lang.get(["additional-files", "file"]))
         self.btn.grid(row=0, column=0, columnspan=1 if direction == "vertical" else 2, sticky=tk.NSEW)
         self.list_var = tk.Variable(value=list_files)
         self.list = tk.Listbox(self.w, listvariable=self.list_var, selectmode=tk.SINGLE, height=len(list_files))
@@ -43,11 +38,16 @@ class PersonDataFileList:
         pass
 
     def add_btn_click(self):
-
+        self.__callback(f)
+        fdiag.askopenfilename(
+            title=title_formater(self.__ui.lang.get(["diag", "open", "title"])),
+            filetypes=((self.__ui.lang.get(["files", "pdf-files"]), "*.pdf"), (self.__ui.lang.get(["files", "all-files"]), "*.*")),
+        )
         pass
 
-    def add_btn_return(self, person_id: int):
-        self.__callback(person_id, "add")
+    def add_btn_return(self, f: FileInDb):
+        print(f)
+        self.__callback(f, "add")
 
     def remove_btn_click(self):
         tk_person_selected = self.list.curselection()  # type: ignore

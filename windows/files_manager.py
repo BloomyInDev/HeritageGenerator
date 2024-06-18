@@ -1,14 +1,12 @@
 import tkinter as tk
-import tkinter.ttk as ttk
-import tkinter.messagebox as msgbox
-import tkinter.filedialog as fdiag
+from tkinter import ttk, filedialog as fdiag
 import os
 from typing import Any, Callable, Literal
 from PIL import Image, ImageTk
 from components.common import title_formater
 from components.files import PersonDataFileList
 from utils.config import Language
-from utils.file import FileInDb, createFile
+from utils.file import FileInDb
 from utils.images import ProfilePicture
 from utils.person import Person
 from utils.ui_template import UiTemplate
@@ -44,6 +42,7 @@ class AdditionalFilesManagerWindow:
     def __create_additional_files_frame(self):
         self.additionalFilesFrame = ttk.Labelframe(self.w, text="Additional files")
         self.addFilesComponent = PersonDataFileList(self.additionalFilesFrame, self.__ui, self.__ui.sql.get_files_for_person(self.person.id), self.call_change_file)
+        self.addFilesComponent.w.grid(row=0, column=0)
         self.additionalFilesFrame.grid(row=2, column=0)
 
     def call_change_pp(self):
@@ -51,6 +50,7 @@ class AdditionalFilesManagerWindow:
         return
 
     def call_change_file(self, f: FileInDb, act: Literal["add", "remove"]):
+        print(act, f.id, f.name)
         return
 
     def update_data(self):

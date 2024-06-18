@@ -64,7 +64,8 @@
         }
     },
     "additional-files": {
-        "title": "Fichiers suplémentaires de {person-name}"
+        "title": "Fichiers suplémentaires de {person-name}",
+        "file": "Fichiers"
     },
     "about": {
         "title": "A propos",
@@ -87,8 +88,8 @@
     },
     "error": {
         "title": "Erreur",
-        "no-file-loaded": "Vous devez ouvrir un fichier pour faire sa",
-        "no-person-selected": "Vous devez choisir une personne pour faire sa"
+        "no-file-loaded": "Vous devez ouvrir un fichier pour faire ça",
+        "no-person-selected": "Vous devez choisir une personne pour faire ça"
     },
     "diag": {
         "open": {
@@ -108,6 +109,7 @@
     },
     "files": {
         "hgb-files": "Fichiers HeritageGenerator",
+        "pdf-files": "Fichiers PortableFileDocument (PDF)",
         "all-files": "Tout les fichiers"
     }
 }
